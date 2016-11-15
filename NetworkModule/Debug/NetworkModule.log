@@ -1,0 +1,4 @@
+﻿  main.cpp
+c:\users\tobias kling\documents\visual studio 2015\projects\networkmodule\networkmodule\main.cpp(15): warning C4101: 'result': unreferenced local variable
+  NetworkModule.vcxproj -> C:\Users\Tobias Kling\documents\visual studio 2015\Projects\NetworkModule\Debug\NetworkModule.exe
+  NetworkModule.vcxproj -> C:\Users\Tobias Kling\documents\visual studio 2015\Projects\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)
