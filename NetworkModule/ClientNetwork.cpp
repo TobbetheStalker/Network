@@ -195,7 +195,8 @@ void ClientNetwork::SendFlagPackage(PacketTypes type)
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
-	Packet packet = this->Packet_Flag(type);
+	Packet packet;
+	this->Packet_Flag(type, packet);
 
 	packet.serialize(packet_data);
 
@@ -276,6 +277,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			packet.deserialize(&(network_data[i]));
 			i += sizeof(Packet);
 
+			printf("PackageType: %d\n Size of Package: %f\n", packet.packet_type, sizeof(unsigned int));
 			switch (packet.packet_type) {
 
 				case INIT_CONNECTION:
@@ -297,7 +299,7 @@ void ClientNetwork::ReadMessagesFromClients()
 					break;
 
 				case DISCONNECT_REQUEST:
-					printf("Host recived: DISCONNECT_REQUEST from Client&\n", iter->first);
+					printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
 					this->SendFlagPackage(DISCONNECT_ACCEPTED);
 					this->RemoveClient(iter->first);	//Send the clientID
 					iter = this->connectedClients.end();
@@ -324,12 +326,16 @@ void ClientNetwork::ReadMessagesFromClients()
 							eP->deserialize(&(network_data[j]));
 
 						}
-						printf("ID: %a, NewPos: &b, NewVelocity: &c, NewRotation: &d, NewRotationVelocity &e\n", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
+						printf("ID: %a, NewPos: %b, NewVelocity: %c, NewRotation: %d, NewRotationVelocity %e\n", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
 					}
 					else
 					{
 						printf("Failed to throw to EntityPackage\n");
 					}
+
+					iter++;
+					delete eP;
+					break;
 	
 				default:
 
@@ -342,12 +348,10 @@ void ClientNetwork::ReadMessagesFromClients()
 	}
 }
 
-Packet ClientNetwork::Packet_Flag(PacketTypes type)
+void ClientNetwork::Packet_Flag(PacketTypes type, Packet& packet)
 {
-	Packet packet;
 	packet.packet_type = type;
 
-	return packet;
 }
 
 EntityPacket ClientNetwork::Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
