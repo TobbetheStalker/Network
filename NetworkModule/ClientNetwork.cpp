@@ -254,6 +254,7 @@ void ClientNetwork::ReadMessagesFromClients()
 {
 	Packet packet;
 	char network_data[MAX_PACKET_SIZE];
+	EntityPacket* eP = nullptr;
 
 	// go through all clients
 	std::map<unsigned int, SOCKET>::iterator iter;
@@ -309,19 +310,27 @@ void ClientNetwork::ReadMessagesFromClients()
 					break;
 
 				case ENTITY_UPDATE:
-					EntityPacket* eP = dynamic_cast<EntityPacket*>(&packet);
-					printf("Recived a ENTITY_UPDATE package:\n");
 
-					int j = i;
-
-					while (j < (unsigned int)data_length)
+					eP = dynamic_cast<EntityPacket*>(&packet);
+					if (eP != nullptr) 
 					{
-						j += sizeof(EntityPacket);
-						eP->deserialize(&(network_data[j]));
+						printf("Recived a ENTITY_UPDATE package:\n");
 
+						int j = i;
+
+						while (j < (unsigned int)data_length)
+						{
+							j += sizeof(EntityPacket);
+							eP->deserialize(&(network_data[j]));
+
+						}
+						printf("ID: %a, NewPos: &b, NewVelocity: &c, NewRotation: &d, NewRotationVelocity &e\n", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
 					}
-					printf("ID: %a, NewPos: &b, NewVelocity: &c, NewRotation: &d, NewRotationVelocity &e", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
-
+					else
+					{
+						printf("Failed to throw to EntityPackage\n");
+					}
+	
 				default:
 
 					printf("error in packet types\n");
