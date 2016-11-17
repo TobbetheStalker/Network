@@ -103,7 +103,7 @@ bool ClientNetwork::Shutdown()
 	return true;
 }
 
-void ClientNetwork::update()
+void ClientNetwork::Update()
 {
 	//Check for new clients
 	int nrOfPackages = 0;
@@ -185,46 +185,33 @@ void ClientNetwork::Join(char* ip)
 	}
 
 	//Testing sending init packet
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
-
-	Packet packet;
-	packet.packet_type = INIT_CONNECTION;
-
-	packet.serialize(packet_data);
-
-	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
+	this->SendFlagPackage(INIT_CONNECTION);
 	printf("Sent INIT_CONNECTION to host\n");
 
 }
 
-void ClientNetwork::SendActionPackages()
+void ClientNetwork::SendFlagPackage(PacketTypes type)
 {
-	// send action packet
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
-	Packet packet;
-	packet.packet_type = ACTION_EVENT;
+	Packet packet = this->Packet_Flag(type);
 
 	packet.serialize(packet_data);
 
-	this->SendToAll(packet_data, packet_size);
-	printf("Sendt actionPacket to all clients\n");
+	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
 }
 
-void ClientNetwork::SendDissconnectAccepted(unsigned int client_id)
+void ClientNetwork::SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
 {
-	// send action packet
-	const unsigned int packet_size = sizeof(Packet);
+	const unsigned int packet_size = sizeof(EntityPacket);
 	char packet_data[packet_size];
 
-	Packet packet;
-	packet.packet_type = DISCONNECT_ACCEPTED;
+	EntityPacket packet = this->Packet_EntityUpdate(entityID, newPos, newVelocity, newRotation, newRotationVelocity);
 
 	packet.serialize(packet_data);
 
-	this->SendToOne(packet_data, packet_size, client_id);
+	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
 }
 
 bool ClientNetwork::AcceptNewClient(unsigned int & id)
@@ -290,46 +277,81 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			switch (packet.packet_type) {
 
-			case INIT_CONNECTION:
+				case INIT_CONNECTION:
 
-				printf("server received init packet from client\n");
+					printf("server received init packet from client\n");
 
-				this->SendActionPackages();
+					this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 
-				iter++;
-				break;
+					iter++;
+					break;
 
-			case ACTION_EVENT:
+				case ACTION_EVENT:
 
-				printf("server received action event packet from client\n");
+					printf("server received action event packet from client\n");
 
-				this->SendActionPackages();
+					this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 
-				iter++;
-				break;
+					iter++;
+					break;
 
-			case DISCONNECT_REQUEST:
-				printf("Host recived: DISCONNECT_REQUEST from Client&\n", iter->first);
-				this->SendDissconnectAccepted(iter->first);
-				this->RemoveClient(iter->first);	//Send the clientID
-				iter = this->connectedClients.end();
-				break;
+				case DISCONNECT_REQUEST:
+					printf("Host recived: DISCONNECT_REQUEST from Client&\n", iter->first);
+					this->SendFlagPackage(DISCONNECT_ACCEPTED);
+					this->RemoveClient(iter->first);	//Send the clientID
+					iter = this->connectedClients.end();
+					break;
 
-			case DISCONNECT_ACCEPTED:
-				printf("Client recived: DISCONNECT_ACCEPTED\n");
-				this->RemoveClient(iter->first);	//Send the clientID
-				iter = this->connectedClients.end();
-				break;
+				case DISCONNECT_ACCEPTED:
+					printf("Client recived: DISCONNECT_ACCEPTED\n");
+					this->RemoveClient(iter->first);	//Send the clientID
+					iter = this->connectedClients.end();
+					break;
 
-			default:
+				case ENTITY_UPDATE:
+					EntityPacket* eP = dynamic_cast<EntityPacket*>(&packet);
+					printf("Recived a ENTITY_UPDATE package:\n");
 
-				printf("error in packet types\n");
+					int j = i;
 
-				iter++;
-				break;
+					while (j < (unsigned int)data_length)
+					{
+						j += sizeof(EntityPacket);
+						eP->deserialize(&(network_data[j]));
+
+					}
+					printf("ID: %a, NewPos: &b, NewVelocity: &c, NewRotation: &d, NewRotationVelocity &e", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
+
+				default:
+
+					printf("error in packet types\n");
+
+					iter++;
+					break;
 			}
 		}
 	}
+}
+
+Packet ClientNetwork::Packet_Flag(PacketTypes type)
+{
+	Packet packet;
+	packet.packet_type = type;
+
+	return packet;
+}
+
+EntityPacket ClientNetwork::Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
+{
+	EntityPacket packet;
+	packet.packet_type = ENTITY_UPDATE;
+	packet.EntityID = entityID;
+	packet.newPos = newPos;
+	packet.newRotation = newRotation;
+	packet.newRotationVelocity = newRotationVelocity;
+	packet.newVelocity = newVelocity;
+
+	return packet;
 }
 
 void ClientNetwork::SendToAll(char * packets, int totalSize)
@@ -349,28 +371,6 @@ void ClientNetwork::SendToAll(char * packets, int totalSize)
 			closesocket(currentSocket);
 		}
 	}
-}
-
-void ClientNetwork::SendToOne(char * packets, int totalSize, unsigned int clientID)
-{
-	std::map<unsigned int, SOCKET>::iterator iter = this->connectedClients.find(clientID);
-	
-	if (iter != this->connectedClients.end())
-	{
-		SOCKET reciverSocket = iter->second;
-		unsigned int iSendResult = NetworkService::sendMessage(reciverSocket, packets, totalSize);
-
-		if (iSendResult == SOCKET_ERROR)
-		{
-			printf("send failed with error: %d\n", WSAGetLastError());
-			closesocket(reciverSocket);
-		}
-	}
-	else
-	{
-		printf("send failed to find ClientID\n");
-	}
-
 }
 
 bool ClientNetwork::RemoveClient(unsigned int clientID)

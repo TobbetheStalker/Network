@@ -35,7 +35,7 @@ void clientLoop1(void*)
 
 	while (duration < 2)
 	{
-		cN.update();
+		cN.Update();
 		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 	}
 	

@@ -5,6 +5,7 @@
 #include <ws2tcpip.h>
 #include <map>
 #include "NetworkData.h"
+
 using namespace std;
 #pragma comment (lib, "Ws2_32.lib")
 
@@ -23,9 +24,12 @@ private:
 	int ReceiveData(unsigned int client_id, char * recvbuf);
 	bool AcceptNewClient(unsigned int & id);	//accept new connections
 	void SendToAll(char * packets, int totalSize);
-	void SendToOne(char * packets, int totalSize, unsigned int clientID);
 	bool RemoveClient(unsigned int clientID);
 	void ReadMessagesFromClients();
+
+	//Create packages helper functions
+	Packet Packet_Flag(PacketTypes type);	//Send a packet with only a header and and empty data
+	EntityPacket Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
 
 public:
 	ClientNetwork();
@@ -34,10 +38,12 @@ public:
 	bool Initialize();
 	bool Shutdown();
 
-	void update();
+	void Update();
 	void Join(char* ip);
-	void SendActionPackages();
-	void SendDissconnectAccepted(unsigned int client_id);
+
+	//Public package functions
+	void SendFlagPackage(PacketTypes type);
+	void SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
 	
 
 
