@@ -8,10 +8,5 @@ c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cp
 c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): warning C4477: 'printf' : format string '%e' requires an argument of type 'double', but variadic argument 4 has type 'DirectX::XMFLOAT3'
 c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): warning C4474: 'printf' : too many arguments passed for format string
   c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): note: placeholders and their parameters expect 4 variadic arguments, but 5 were provided
-  Generating Code...
-  Compiling...
-  main.cpp
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\main.cpp(15): warning C4101: 'result': unreferenced local variable
-  Generating Code...
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)

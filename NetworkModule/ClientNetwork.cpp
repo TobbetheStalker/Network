@@ -276,7 +276,7 @@ void ClientNetwork::ReadMessagesFromClients()
 		while (i < (unsigned int)data_length)
 		{
 			packet.deserialize(&(network_data[i]));
-			i += sizeof(Packet);
+			i += sizeof(Packet)-4;
 
 			printf("PackageType: %d\n Data Length: %d \n Size of Package: %d\n", packet.packet_type, data_length, sizeof(Packet));
 			switch (packet.packet_type) {
@@ -336,6 +336,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 					iter++;
 					delete eP;
+					eP = nullptr;
 					break;
 	
 				default:
