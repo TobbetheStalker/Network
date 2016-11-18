@@ -277,7 +277,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			packet.deserialize(&(network_data[i]));
 			i += sizeof(Packet);
 
-			printf("PackageType: %d\n Size of Package: %f\n", packet.packet_type, sizeof(unsigned int));
+			printf("PackageType: %d\n Data Length: %d \n Size of Package: %d\n", packet.packet_type, data_length, sizeof(Packet));
 			switch (packet.packet_type) {
 
 				case INIT_CONNECTION:
@@ -311,31 +311,31 @@ void ClientNetwork::ReadMessagesFromClients()
 					iter = this->connectedClients.end();
 					break;
 
-				case ENTITY_UPDATE:
+				//case ENTITY_UPDATE:
 
-					eP = dynamic_cast<EntityPacket*>(&packet);
-					if (eP != nullptr) 
-					{
-						printf("Recived a ENTITY_UPDATE package:\n");
+				//	eP = dynamic_cast<EntityPacket*>(&packet);
+				//	if (eP != nullptr) 
+				//	{
+				//		printf("Recived a ENTITY_UPDATE package:\n");
 
-						int j = i;
+				//		int j = i;
 
-						while (j < (unsigned int)data_length)
-						{
-							j += sizeof(EntityPacket);
-							eP->deserialize(&(network_data[j]));
+				//		while (j < (unsigned int)data_length)
+				//		{
+				//			j += sizeof(EntityPacket);
+				//			eP->deserialize(&(network_data[j]));
 
-						}
-						printf("ID: %a, NewPos: %b, NewVelocity: %c, NewRotation: %d, NewRotationVelocity %e\n", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
-					}
-					else
-					{
-						printf("Failed to throw to EntityPackage\n");
-					}
+				//		}
+				//		printf("ID: %a, NewPos: %b, NewVelocity: %c, NewRotation: %d, NewRotationVelocity %e\n", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
+				//	}
+				//	else
+				//	{
+				//		printf("Failed to throw to EntityPackage\n");
+				//	}
 
-					iter++;
-					delete eP;
-					break;
+				//	iter++;
+				//	delete eP;
+				//	break;
 	
 				default:
 
@@ -351,7 +351,6 @@ void ClientNetwork::ReadMessagesFromClients()
 void ClientNetwork::Packet_Flag(PacketTypes type, Packet& packet)
 {
 	packet.packet_type = type;
-
 }
 
 EntityPacket ClientNetwork::Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
