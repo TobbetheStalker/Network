@@ -273,14 +273,19 @@ void ClientNetwork::ReadMessagesFromClients()
 			continue;
 		}
 
-		int i = 0;
-		while (i < sizeof(PacketTypes))
+		//Read the header data into header variable
+		for (int j = 0; j < (unsigned int) sizeof(PacketTypes); j++)
 		{
-			//packet.deserialize(&(network_data[i]));
-			memcpy(&header, &(network_data[i]), sizeof(PacketTypes));
-			i += sizeof(PacketTypes);
+			memcpy(&header, &network_data[4+j], (unsigned int) sizeof(PacketTypes));
+		}
+		
+		printf("PackageType: %d\n Data Length: %d \n", header, data_length);
 
-			printf("PackageType: %d\n Data Length: %d \n Size of Package: %d\n", packet.packet_type, data_length, sizeof(Packet));
+		int i = 0;
+		while (i < (unsigned int)data_length)
+		{
+
+			//Cheack what header was read
 			switch (header) {
 
 				case INIT_CONNECTION:
@@ -315,26 +320,7 @@ void ClientNetwork::ReadMessagesFromClients()
 					break;
 
 				case ENTITY_UPDATE:
-
-					eP = dynamic_cast<EntityPacket*>(&packet);
-					if (eP != nullptr) 
-					{
-						printf("Recived a ENTITY_UPDATE package:\n");
-
-						int j = i;
-
-						while (j < (unsigned int)data_length)
-						{
-							j += sizeof(EntityPacket);
-							eP->deserialize(&(network_data[j]));
-
-						}
-						printf("ID: %a, NewPos: %b, NewVelocity: %c, NewRotation: %d, NewRotationVelocity %e\n", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
-					}
-					else
-					{
-						printf("Failed to throw to EntityPackage\n");
-					}
+					eP->deserialize(&(network_data[i]));
 
 					iter++;
 					delete eP;
