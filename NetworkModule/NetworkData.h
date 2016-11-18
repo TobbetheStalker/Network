@@ -19,35 +19,35 @@ struct Packet
 {
 	unsigned int packet_type;	//PacketType enums
 
-	 void serialize(char * data) 
+	virtual void serialize(char * data) 
 	{			//Turn the PacketType into bytes
 		memcpy(data, this, sizeof(Packet));
 	}
 
-	 void deserialize(char * data)
+	virtual void deserialize(char * data)
 	{			//Turn bytes into PacketType
 		memcpy(this, data, sizeof(Packet));
 	}
 };
 
-//struct EntityPacket : public Packet
-//{
-//	int EntityID;
-//	DirectX::XMFLOAT3 newPos;
-//	DirectX::XMFLOAT3 newVelocity;
-//	DirectX::XMFLOAT3 newRotation;
-//	DirectX::XMFLOAT3 newRotationVelocity;
-//
-//	void serialize(char * data)
-//	{			//Turn the PacketType into bytes
-//		memcpy(data, this, sizeof(EntityPacket));
-//	}
-//
-//	void deserialize(char * data)
-//	{			//Turn bytes into PacketType
-//		memcpy(this, data, sizeof(EntityPacket));
-//	}
-//
-//};
+struct EntityPacket : public Packet
+{
+	int EntityID;
+	DirectX::XMFLOAT3 newPos;
+	DirectX::XMFLOAT3 newVelocity;
+	DirectX::XMFLOAT3 newRotation;
+	DirectX::XMFLOAT3 newRotationVelocity;
+
+	void serialize(char * data)
+	{			//Turn the PacketType into bytes
+		memcpy(data, this, sizeof(EntityPacket));
+	}
+
+	void deserialize(char * data)
+	{			//Turn bytes into PacketType
+		memcpy(this, data, sizeof(EntityPacket));
+	}
+
+};
 
 #endif

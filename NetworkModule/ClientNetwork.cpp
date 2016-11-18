@@ -204,17 +204,17 @@ void ClientNetwork::SendFlagPackage(PacketTypes type)
 	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
 }
 
-//void ClientNetwork::SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
-//{
-//	const unsigned int packet_size = sizeof(EntityPacket);
-//	char packet_data[packet_size];
-//
-//	EntityPacket packet = this->Packet_EntityUpdate(entityID, newPos, newVelocity, newRotation, newRotationVelocity);
-//
-//	packet.serialize(packet_data);
-//
-//	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
-//}
+void ClientNetwork::SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
+{
+	const unsigned int packet_size = sizeof(EntityPacket);
+	char packet_data[packet_size];
+
+	EntityPacket packet = this->Packet_EntityUpdate(entityID, newPos, newVelocity, newRotation, newRotationVelocity);
+
+	packet.serialize(packet_data);
+
+	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
+}
 
 bool ClientNetwork::AcceptNewClient(unsigned int & id)
 {
@@ -256,7 +256,7 @@ void ClientNetwork::ReadMessagesFromClients()
 {
 	Packet packet;
 	char network_data[MAX_PACKET_SIZE];
-	//EntityPacket* eP = nullptr;
+	EntityPacket* eP = nullptr;
 
 	// go through all clients
 	std::map<unsigned int, SOCKET>::iterator iter;
@@ -312,7 +312,7 @@ void ClientNetwork::ReadMessagesFromClients()
 					iter = this->connectedClients.end();
 					break;
 
-				/*case ENTITY_UPDATE:
+				case ENTITY_UPDATE:
 
 					eP = dynamic_cast<EntityPacket*>(&packet);
 					if (eP != nullptr) 
@@ -336,7 +336,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 					iter++;
 					delete eP;
-					break;*/
+					break;
 	
 				default:
 
@@ -355,18 +355,18 @@ void ClientNetwork::Packet_Flag(PacketTypes type, Packet& packet)
 	packet.packet_type = type;
 }
 
-//EntityPacket ClientNetwork::Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
-//{
-//	EntityPacket packet;
-//	packet.packet_type = ENTITY_UPDATE;
-//	packet.EntityID = entityID;
-//	packet.newPos = newPos;
-//	packet.newRotation = newRotation;
-//	packet.newRotationVelocity = newRotationVelocity;
-//	packet.newVelocity = newVelocity;
-//
-//	return packet;
-//}
+EntityPacket ClientNetwork::Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
+{
+	EntityPacket packet;
+	packet.packet_type = ENTITY_UPDATE;
+	packet.EntityID = entityID;
+	packet.newPos = newPos;
+	packet.newRotation = newRotation;
+	packet.newRotationVelocity = newRotationVelocity;
+	packet.newVelocity = newVelocity;
+
+	return packet;
+}
 
 void ClientNetwork::SendToAll(char * packets, int totalSize)
 {
