@@ -186,15 +186,7 @@ void ClientNetwork::Join(char* ip)
 
 	//Testing sending init packet
 	//this->SendFlagPackage(INIT_CONNECTION);
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
-
-	Packet packet;
-	packet.packet_type = INIT_CONNECTION;
-
-	packet.serialize(packet_data);
-
-	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
+	this->SendFlagPackage(INIT_CONNECTION);
 	printf("Sent INIT_CONNECTION to host\n");
 
 }
@@ -320,31 +312,31 @@ void ClientNetwork::ReadMessagesFromClients()
 					iter = this->connectedClients.end();
 					break;
 
-				//case ENTITY_UPDATE:
+				/*case ENTITY_UPDATE:
 
-				//	eP = dynamic_cast<EntityPacket*>(&packet);
-				//	if (eP != nullptr) 
-				//	{
-				//		printf("Recived a ENTITY_UPDATE package:\n");
+					eP = dynamic_cast<EntityPacket*>(&packet);
+					if (eP != nullptr) 
+					{
+						printf("Recived a ENTITY_UPDATE package:\n");
 
-				//		int j = i;
+						int j = i;
 
-				//		while (j < (unsigned int)data_length)
-				//		{
-				//			j += sizeof(EntityPacket);
-				//			eP->deserialize(&(network_data[j]));
+						while (j < (unsigned int)data_length)
+						{
+							j += sizeof(EntityPacket);
+							eP->deserialize(&(network_data[j]));
 
-				//		}
-				//		printf("ID: %a, NewPos: %b, NewVelocity: %c, NewRotation: %d, NewRotationVelocity %e\n", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
-				//	}
-				//	else
-				//	{
-				//		printf("Failed to throw to EntityPackage\n");
-				//	}
+						}
+						printf("ID: %a, NewPos: %b, NewVelocity: %c, NewRotation: %d, NewRotationVelocity %e\n", eP->EntityID, eP->newPos, eP->newVelocity, eP->newRotation, eP->newRotationVelocity);
+					}
+					else
+					{
+						printf("Failed to throw to EntityPackage\n");
+					}
 
-				//	iter++;
-				//	delete eP;
-				//	break;
+					iter++;
+					delete eP;
+					break;*/
 	
 				default:
 
@@ -353,6 +345,7 @@ void ClientNetwork::ReadMessagesFromClients()
 					iter++;
 					break;
 			}
+		
 		}
 	}
 }

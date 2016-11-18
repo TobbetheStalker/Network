@@ -43,7 +43,7 @@ public:
 
 	//Public package functions
 	void SendFlagPackage(PacketTypes type);
-	void SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
+	//void SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
 	
 
 

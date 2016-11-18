@@ -19,12 +19,12 @@ struct Packet
 {
 	unsigned int packet_type;	//PacketType enums
 
-	void serialize(char * data) 
+	 void serialize(char * data) 
 	{			//Turn the PacketType into bytes
 		memcpy(data, this, sizeof(Packet));
 	}
 
-	void deserialize(char * data)
+	 void deserialize(char * data)
 	{			//Turn bytes into PacketType
 		memcpy(this, data, sizeof(Packet));
 	}
