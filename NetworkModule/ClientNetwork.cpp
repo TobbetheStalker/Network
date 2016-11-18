@@ -185,7 +185,16 @@ void ClientNetwork::Join(char* ip)
 	}
 
 	//Testing sending init packet
-	this->SendFlagPackage(INIT_CONNECTION);
+	//this->SendFlagPackage(INIT_CONNECTION);
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.packet_type = INIT_CONNECTION;
+
+	packet.serialize(packet_data);
+
+	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
 	printf("Sent INIT_CONNECTION to host\n");
 
 }
