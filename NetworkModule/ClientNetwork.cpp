@@ -274,11 +274,11 @@ void ClientNetwork::ReadMessagesFromClients()
 		}
 
 		int i = 0;
-		while (i < (unsigned int)data_length)
+		while (i < sizeof(PacketTypes))
 		{
 			//packet.deserialize(&(network_data[i]));
-			memcpy(&header, &(network_data[i]), sizeof(Packet));
-			i += sizeof(unsigned int);
+			memcpy(&header, &(network_data[i]), sizeof(PacketTypes));
+			i += sizeof(PacketTypes);
 
 			printf("PackageType: %d\n Data Length: %d \n Size of Package: %d\n", packet.packet_type, data_length, sizeof(Packet));
 			switch (header) {
