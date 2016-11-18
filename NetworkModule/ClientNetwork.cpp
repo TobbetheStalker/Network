@@ -273,20 +273,13 @@ void ClientNetwork::ReadMessagesFromClients()
 			continue;
 		}
 
-		//Read the header data into header variable
-		for (int j = 0; j < (unsigned int) sizeof(PacketTypes); j++)
-		{
-			memcpy(&header, &network_data[4+j], (unsigned int) sizeof(PacketTypes));
-		}
-		
-		printf("PackageType: %d\n Data Length: %d \n", header, data_length);
-
 		int i = 0;
 		while (i < (unsigned int)data_length)
 		{
+			packet.deserialize(&(network_data[i]));
+			i += sizeof(Packet);
 
-			//Cheack what header was read
-			switch (header) {
+			switch (packet.packet_type) {
 
 				case INIT_CONNECTION:
 
