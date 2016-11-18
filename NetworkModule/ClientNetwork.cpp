@@ -257,6 +257,7 @@ void ClientNetwork::ReadMessagesFromClients()
 	Packet packet;
 	char network_data[MAX_PACKET_SIZE];
 	EntityPacket* eP = nullptr;
+	PacketTypes header;
 
 	// go through all clients
 	std::map<unsigned int, SOCKET>::iterator iter;
@@ -275,11 +276,12 @@ void ClientNetwork::ReadMessagesFromClients()
 		int i = 0;
 		while (i < (unsigned int)data_length)
 		{
-			packet.deserialize(&(network_data[i]));
-			i += sizeof(Packet)-4;
+			//packet.deserialize(&(network_data[i]));
+			memcpy(&header, &(network_data[i]), sizeof(Packet));
+			i += sizeof(unsigned int);
 
 			printf("PackageType: %d\n Data Length: %d \n Size of Package: %d\n", packet.packet_type, data_length, sizeof(Packet));
-			switch (packet.packet_type) {
+			switch (header) {
 
 				case INIT_CONNECTION:
 

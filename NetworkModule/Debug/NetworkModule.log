@@ -1,12 +1,15 @@
-﻿  ClientNetwork.cpp
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(276): warning C4018: '<': signed/unsigned mismatch
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(324): warning C4018: '<': signed/unsigned mismatch
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): warning C4477: 'printf' : format string '%a' requires an argument of type 'double', but variadic argument 1 has type 'int'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): warning C4476: 'printf' : unknown type field character 'b' in format specifier
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): warning C4477: 'printf' : format string '%c' requires an argument of type 'int', but variadic argument 2 has type 'DirectX::XMFLOAT3'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'DirectX::XMFLOAT3'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): warning C4477: 'printf' : format string '%e' requires an argument of type 'double', but variadic argument 4 has type 'DirectX::XMFLOAT3'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): warning C4474: 'printf' : too many arguments passed for format string
-  c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(330): note: placeholders and their parameters expect 4 variadic arguments, but 5 were provided
+﻿  main.cpp
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\main.cpp(15): warning C4101: 'result': unreferenced local variable
+  ClientNetwork.cpp
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(277): warning C4018: '<': signed/unsigned mismatch
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(326): warning C4018: '<': signed/unsigned mismatch
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(332): warning C4477: 'printf' : format string '%a' requires an argument of type 'double', but variadic argument 1 has type 'int'
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(332): warning C4476: 'printf' : unknown type field character 'b' in format specifier
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(332): warning C4477: 'printf' : format string '%c' requires an argument of type 'int', but variadic argument 2 has type 'DirectX::XMFLOAT3'
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(332): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'DirectX::XMFLOAT3'
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(332): warning C4477: 'printf' : format string '%e' requires an argument of type 'double', but variadic argument 4 has type 'DirectX::XMFLOAT3'
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(332): warning C4474: 'printf' : too many arguments passed for format string
+  c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(332): note: placeholders and their parameters expect 4 variadic arguments, but 5 were provided
+  Generating Code...
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)

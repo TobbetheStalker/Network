@@ -36,7 +36,7 @@ public:
 	~ClientNetwork();
 
 	bool Initialize();
-	bool Shutdown();
+	bool Shutdown();  
 
 	void Update();
 	void Join(char* ip);
