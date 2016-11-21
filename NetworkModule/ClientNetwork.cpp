@@ -298,7 +298,7 @@ void ClientNetwork::ReadMessagesFromClients()
 				case INIT_CONNECTION:
 
 					printf("server received init packet from client\n");
-
+					this->connectSocket = iter->second;
 					this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 
 					iter++;
