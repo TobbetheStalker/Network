@@ -200,8 +200,9 @@ void ClientNetwork::SendFlagPackage(PacketTypes type)
 	this->Packet_Flag(type, packet);
 
 	packet.serialize(packet_data);
-
-	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
+	
+	int nrOfBytesSent = NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
+	printf("nrOfBytesSent: %d", nrOfBytesSent);
 }
 
 void ClientNetwork::SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
@@ -307,7 +308,7 @@ void ClientNetwork::ReadMessagesFromClients()
 				case ACTION_EVENT:
 
 					printf("server received action event packet from client\n");
-
+					this->connectSocket = iter->second;
 					this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 
 					iter++;
@@ -315,6 +316,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 				case DISCONNECT_REQUEST:
 					printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
+					this->connectSocket = iter->second;
 					this->SendFlagPackage(DISCONNECT_ACCEPTED);
 					this->RemoveClient(iter->first);	//Send the clientID
 					iter = this->connectedClients.end();
