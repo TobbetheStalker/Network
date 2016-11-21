@@ -1,5 +1,8 @@
-﻿  ClientNetwork.cpp
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(292): warning C4018: '<': signed/unsigned mismatch
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(261): warning C4101: 'header': unreferenced local variable
+﻿  main.cpp
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\main.cpp(15): warning C4101: 'result': unreferenced local variable
+  ClientNetwork.cpp
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(294): warning C4018: '<': signed/unsigned mismatch
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(263): warning C4101: 'header': unreferenced local variable
+  Generating Code...
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)

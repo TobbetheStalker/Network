@@ -110,7 +110,6 @@ void ClientNetwork::Update()
 	if (this->AcceptNewClient(this->client_id))	// get new clients
 	{
 		printf("client %d has been connected to the server\n", this->client_id);
-		this->client_id++;
 	}
 
 	//Read messages
@@ -186,8 +185,11 @@ void ClientNetwork::Join(char* ip)
 
 	//Testing sending init packet
 	//this->SendFlagPackage(INIT_CONNECTION);
-	this->SendFlagPackage(INIT_CONNECTION);
+	this->SendFlagPackage(CONNECTION_REQUEST);
 	printf("Sent INIT_CONNECTION to host\n");
+
+	this->connectedClients.insert(pair<unsigned int, SOCKET>(this->client_id, this->connectSocket));
+	this->client_id++;
 
 }
 
@@ -230,7 +232,7 @@ bool ClientNetwork::AcceptNewClient(unsigned int & id)
 		setsockopt(otherClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof(value));	//TCP Options
 																						// insert new client into session id table
 		this->connectedClients.insert(pair<unsigned int, SOCKET>(id, otherClientSocket));
-
+		this->client_id++;
 		return true;
 	}
 
@@ -296,9 +298,17 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			switch (packet.packet_type) {
 
-				case INIT_CONNECTION:
+				case CONNECTION_REQUEST:
 
-					printf("server received init packet from client\n");
+					printf("Host received connection packet from client\n");
+					this->connectSocket = iter->second;
+					this->SendFlagPackage(CONNECTION_ACCEPTED);	//Tell the connected client that it is accepted
+
+					iter++;
+					break;
+
+				case CONNECTION_ACCEPTED:
+					printf("Client received CONNECTION_ACCEPTED packet from Host\n");
 					this->connectSocket = iter->second;
 					this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 
@@ -307,7 +317,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 				case ACTION_EVENT:
 
-					printf("server received action event packet from client\n");
+					printf("received action event packet\n");
 					this->connectSocket = iter->second;
 					this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 
