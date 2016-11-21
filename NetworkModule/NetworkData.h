@@ -19,18 +19,18 @@ struct Packet
 {
 	unsigned int packet_type;	//PacketType enums
 
-	virtual void serialize(char * data) 
+	void serialize(char * data) 
 	{			//Turn the PacketType into bytes
 		memcpy(data, this, sizeof(Packet));
 	}
 
-	virtual void deserialize(char * data)
+	void deserialize(char * data)
 	{			//Turn bytes into PacketType
 		memcpy(this, data, sizeof(Packet));
 	}
 };
 
-struct EntityPacket : public Packet
+struct EntityPacket
 {
 	int EntityID;
 	DirectX::XMFLOAT3 newPos;

@@ -275,22 +275,23 @@ void ClientNetwork::ReadMessagesFromClients()
 
 		///////////////////
 
-		int j = 0;
-		while (j < (unsigned int)sizeof(PacketTypes))
-		{
-			memcpy(&header, &(network_data[j]), sizeof(Packet));
-			j += sizeof(Packet);
-		}
+		//int j = 0;
+		//while (j < (unsigned int)sizeof(PacketTypes))
+		//{
+		//	memcpy(&header, &(network_data[j]), sizeof(Packet));
+		//	j += sizeof(Packet);
+		//}
 
 
-		printf("DataLength: %d, Header: d%",data_length, (unsigned int)header);
+		//printf("NetworkData: %d, DataLength: %d, PacketTypeSize: %d, PackageSize %d, Header: %d \n",
+		//	network_data, data_length, sizeof(PacketTypes), sizeof(Packet),(unsigned int)header);
 
 		///////////////////
 		int i = 0;
 		while (i < (unsigned int)data_length)
 		{
 			packet.deserialize(&(network_data[i]));
-			i += sizeof(Packet);
+			i += data_length;
 
 			switch (packet.packet_type) {
 
@@ -353,7 +354,6 @@ void ClientNetwork::Packet_Flag(PacketTypes type, Packet& packet)
 EntityPacket ClientNetwork::Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
 {
 	EntityPacket packet;
-	packet.packet_type = ENTITY_UPDATE;
 	packet.EntityID = entityID;
 	packet.newPos = newPos;
 	packet.newRotation = newRotation;
