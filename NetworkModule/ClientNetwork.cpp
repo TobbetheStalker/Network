@@ -273,6 +273,19 @@ void ClientNetwork::ReadMessagesFromClients()
 			continue;
 		}
 
+		///////////////////
+
+		int j = 0;
+		while (j < (unsigned int)sizeof(PacketTypes))
+		{
+			memcpy(&header, &(network_data[j]), sizeof(Packet));
+			j += sizeof(Packet);
+		}
+
+
+		printf("DataLength: %d, Header: d%",data_length, (unsigned int)header);
+
+		///////////////////
 		int i = 0;
 		while (i < (unsigned int)data_length)
 		{
