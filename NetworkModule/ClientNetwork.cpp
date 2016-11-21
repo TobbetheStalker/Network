@@ -204,7 +204,6 @@ void ClientNetwork::SendFlagPackage(PacketTypes type)
 	packet.serialize(packet_data);
 	
 	int nrOfBytesSent = NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
-	printf("nrOfBytesSent: %d", nrOfBytesSent);
 }
 
 void ClientNetwork::SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
