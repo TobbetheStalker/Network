@@ -289,6 +289,8 @@ void ClientNetwork::ReadMessagesFromClients()
 		//	network_data, data_length, sizeof(PacketTypes), sizeof(Packet),(unsigned int)header);
 
 		///////////////////
+
+		printf("Data_size: %d, PacketClassSize: %d\n", data_length, sizeof(Packet) );
 		int i = 0;
 		while (i < (unsigned int)data_length)
 		{
