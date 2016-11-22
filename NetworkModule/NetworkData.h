@@ -32,12 +32,12 @@ struct Packet
 };
 
 struct EntityPacket
-{
-	int EntityID;
-	DirectX::XMFLOAT3 newPos;
-	DirectX::XMFLOAT3 newVelocity;
-	DirectX::XMFLOAT3 newRotation;
-	DirectX::XMFLOAT3 newRotationVelocity;
+{											// nummber of bytes:
+	unsigned int EntityID;					// 4
+	DirectX::XMFLOAT3 newPos;				// 12
+	DirectX::XMFLOAT3 newVelocity;			// 12
+	DirectX::XMFLOAT3 newRotation;			// 12
+	DirectX::XMFLOAT3 newRotationVelocity;	// 12
 
 	void serialize(char * data)
 	{			//Turn the PacketType into bytes

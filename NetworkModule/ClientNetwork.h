@@ -31,6 +31,10 @@ private:
 	void Packet_Flag(PacketTypes type, Packet& packet);	//Send a packet with only a header and and empty data
 	EntityPacket Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
 
+	//Test
+	int testID = 0;
+	DirectX::XMFLOAT3 testFloat3 = DirectX::XMFLOAT3(1,2,3);
+
 public:
 	ClientNetwork();
 	~ClientNetwork();

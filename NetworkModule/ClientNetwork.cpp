@@ -258,7 +258,7 @@ void ClientNetwork::ReadMessagesFromClients()
 {
 	Packet packet;
 	char network_data[MAX_PACKET_SIZE];
-	EntityPacket* eP = nullptr;
+	EntityPacket eP;
 	PacketTypes header;
 
 	// go through all clients
@@ -275,29 +275,18 @@ void ClientNetwork::ReadMessagesFromClients()
 			continue;
 		}
 
-		///////////////////
-
-		//int j = 0;
-		//while (j < (unsigned int)sizeof(PacketTypes))
-		//{
-		//	memcpy(&header, &(network_data[j]), sizeof(Packet));
-		//	j += sizeof(Packet);
-		//}
-
-
-		//printf("NetworkData: %d, DataLength: %d, PacketTypeSize: %d, PackageSize %d, Header: %d \n",
-		//	network_data, data_length, sizeof(PacketTypes), sizeof(Packet),(unsigned int)header);
-
-		///////////////////
-
 		printf("Data_size: %d, PacketClassSize: %d\n", data_length, sizeof(Packet) );
 		int i = 0;
 		while (i < (unsigned int)data_length)
 		{
-			packet.deserialize(&(network_data[i]));
-			i += data_length;
 
-			switch (packet.packet_type) {
+			if (data_length == 4) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
+			{
+				packet.deserialize(&(network_data[i]));	//Deserialize as a Packet
+				i += data_length;
+
+				switch (packet.packet_type) 
+				{
 
 				case CONNECTION_REQUEST:
 
@@ -311,7 +300,12 @@ void ClientNetwork::ReadMessagesFromClients()
 				case CONNECTION_ACCEPTED:
 					printf("Client received CONNECTION_ACCEPTED packet from Host\n");
 					this->connectSocket = iter->second;
-					this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
+					//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
+					
+					//Test
+					this->SendEntityUpdatePackage(this->testID,this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
+					this->testID++;
+
 
 					iter++;
 					break;
@@ -339,22 +333,26 @@ void ClientNetwork::ReadMessagesFromClients()
 					iter = this->connectedClients.end();
 					break;
 
-				case ENTITY_UPDATE:
-					eP->deserialize(&(network_data[i]));
-
-					iter++;
-					delete eP;
-					eP = nullptr;
-					break;
-	
 				default:
-
-					printf("error in packet types\n");
-
-					iter++;
-					break;
+					printf("error in Reading Flag Packet\n");
+				}
 			}
-		
+			else if (data_length == 52)	// 52 bytes is a EntityPacket
+			{
+
+				eP.deserialize(&(network_data[i]));
+				i += data_length;
+
+				//Test
+				printf("Recived EntityPacket with ID: %d", eP.EntityID);
+				this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
+				this->testID++;
+				
+			}
+			else
+			{
+				printf("Unkown packet size of package\n");
+			}
 		}
 	}
 }
