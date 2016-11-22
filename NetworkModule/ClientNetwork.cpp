@@ -344,8 +344,9 @@ void ClientNetwork::ReadMessagesFromClients()
 				i += data_length;
 
 				//Test
-				printf("Recived EntityPacket with ID: %d", eP.EntityID);
-				this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
+				printf("Recived EntityPacket with ID: %d\n", eP.EntityID);
+				printf("X:%d, Y:%d, Z:%d", eP.newPos.x, eP.newPos.y, eP.newPos.z);
+				//this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
 				this->testID++;
 				
 			}
