@@ -33,7 +33,7 @@ private:
 
 	//Test
 	int testID = 0;
-	DirectX::XMFLOAT3 testFloat3 = DirectX::XMFLOAT3(1,2,3);
+	DirectX::XMFLOAT3 testFloat3 = DirectX::XMFLOAT3(1.f,2.f,3.f);
 
 public:
 	ClientNetwork();
