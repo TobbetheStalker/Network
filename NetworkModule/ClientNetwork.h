@@ -28,7 +28,7 @@ private:
 	void ReadMessagesFromClients();
 
 	//Create packages helper functions
-	void Packet_Flag(PacketTypes type, Packet& packet);	//Send a packet with only a header and and empty data
+	Packet Packet_Flag(PacketTypes type);	//Send a packet with only a header and and empty data
 	EntityPacket Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
 
 	//Test

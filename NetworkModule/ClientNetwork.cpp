@@ -107,10 +107,9 @@ void ClientNetwork::Update()
 {
 	//Check for new clients
 	int nrOfPackages = 0;
-	if (this->AcceptNewClient(this->client_id))	// get new clients
-	{
-		printf("client %d has been connected to the server\n", this->client_id);
-	}
+	
+	// Get any new clients
+	this->AcceptNewClient(this->client_id);
 
 	//Read messages
 	ReadMessagesFromClients();
@@ -183,13 +182,16 @@ void ClientNetwork::Join(char* ip)
 		exit(1);
 	}
 
-	//Testing sending init packet
-	//this->SendFlagPackage(INIT_CONNECTION);
-	this->SendFlagPackage(CONNECTION_REQUEST);
-	printf("Sent CONNECTION_REQUEST to host\n");
+	//Send CONNECTION_REQUEST package
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
 
-	this->connectedClients.insert(pair<unsigned int, SOCKET>(this->client_id, this->connectSocket));
-	this->client_id++;
+	Packet packet = this->Packet_Flag(CONNECTION_REQUEST);
+
+	packet.serialize(packet_data);
+
+	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
+	printf("Sent CONNECTION_REQUEST to host\n");
 
 }
 
@@ -198,8 +200,7 @@ void ClientNetwork::SendFlagPackage(PacketTypes type)
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
-	Packet packet;
-	this->Packet_Flag(type, packet);
+	Packet packet = this->Packet_Flag(type);
 
 	packet.serialize(packet_data);
 	
@@ -232,6 +233,7 @@ bool ClientNetwork::AcceptNewClient(unsigned int & id)
 																						
 		// insert new client into session id table 
 		this->connectedClients.insert(pair<unsigned int, SOCKET>(id, otherClientSocket));
+		printf("client %d has been connected to the server\n", this->client_id);
 		this->client_id++;
 
 		return true;
@@ -292,18 +294,25 @@ void ClientNetwork::ReadMessagesFromClients()
 					case CONNECTION_REQUEST:
 
 						printf("Host received connection packet from client\n");
-						this->connectSocket = iter->second;
-						this->SendFlagPackage(CONNECTION_ACCEPTED);	//Tell the connected client that it is accepted
+
+						//Send
+						this->SendFlagPackage(CONNECTION_ACCEPTED);
 
 						iter++;
 						break;
 
 					case CONNECTION_ACCEPTED:
+
 						printf("Client received CONNECTION_ACCEPTED packet from Host\n");
-						this->connectSocket = iter->second;
-						//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
+						//this->connectSocket = iter->second;
+						
+						//If CONNECTION_ACCEPTED is recived, add the host socket
+						this->connectedClients.insert(pair<unsigned int, SOCKET>(this->client_id, iter->second));
+						printf("client %d has been connected to the server\n", this->client_id);
+						this->client_id++;
 
 						//Test
+						//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 						this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
 						this->testID++;
 
@@ -314,7 +323,7 @@ void ClientNetwork::ReadMessagesFromClients()
 					case ACTION_EVENT:
 
 						printf("received action event packet\n");
-						this->connectSocket = iter->second;
+						//this->connectSocket = iter->second;
 						this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 
 						iter++;
@@ -322,7 +331,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 					case DISCONNECT_REQUEST:
 						printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
-						this->connectSocket = iter->second;
+						//this->connectSocket = iter->second;
 						this->SendFlagPackage(DISCONNECT_ACCEPTED);
 						this->RemoveClient(iter->first);	//Send the clientID
 						iter = this->connectedClients.end();
@@ -362,9 +371,11 @@ void ClientNetwork::ReadMessagesFromClients()
 	}
 }
 
-void ClientNetwork::Packet_Flag(PacketTypes type, Packet& packet)
+Packet ClientNetwork::Packet_Flag(PacketTypes type)
 {
+	Packet packet;
 	packet.packet_type = type;
+	return packet;
 }
 
 EntityPacket ClientNetwork::Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
