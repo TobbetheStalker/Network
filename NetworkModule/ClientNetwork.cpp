@@ -281,7 +281,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 		int i = 0;
 		
-			if (data_length == 4) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
+		if (data_length == sizeof(Packet)) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
 			{
 				while (i < (unsigned int)data_length)
 				{
@@ -340,7 +340,7 @@ void ClientNetwork::ReadMessagesFromClients()
 					}
 				}
 			}
-			else if (data_length == 52)	// 52 bytes is a EntityPacket
+			else if (data_length == sizeof(EntityPacket))	// 52 bytes is a EntityPacket
 			{
 
 				while (i < (unsigned int)data_length)
