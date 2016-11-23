@@ -275,7 +275,6 @@ void ClientNetwork::ReadMessagesFromClients()
 			continue;
 		}
 
-		printf("Data_size: %d, PacketClassSize: %d\n", data_length, sizeof(Packet) );
 		int i = 0;
 		
 			if (data_length == 4) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
@@ -348,8 +347,8 @@ void ClientNetwork::ReadMessagesFromClients()
 
 					//Test
 					printf("Recived EntityPacket with ID: %d\n", eP.EntityID);
-					printf("X:%f, Y:%f, Z:%f\n", eP.newPos.x, eP.newPos.y, eP.newPos.z);
-					this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
+					//printf("X:%f, Y:%f, Z:%f\n", eP.newPos.x, eP.newPos.y, eP.newPos.z);
+					//this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
 					this->testID++;
 				}
 				
