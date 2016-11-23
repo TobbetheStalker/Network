@@ -193,6 +193,10 @@ void ClientNetwork::Join(char* ip)
 	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
 	printf("Sent CONNECTION_REQUEST to host\n");
 
+	this->connectedClients.insert(pair<unsigned int, SOCKET>(this->client_id, this->connectSocket));
+	printf("client %d has been connected to the server\n", this->client_id);
+	this->client_id++;
+
 }
 
 void ClientNetwork::SendFlagPackage(PacketTypes type)
@@ -295,7 +299,6 @@ void ClientNetwork::ReadMessagesFromClients()
 
 						printf("Host received connection packet from client\n");
 
-						//Send
 						this->SendFlagPackage(CONNECTION_ACCEPTED);
 
 						iter++;
@@ -304,14 +307,7 @@ void ClientNetwork::ReadMessagesFromClients()
 					case CONNECTION_ACCEPTED:
 
 						printf("Client received CONNECTION_ACCEPTED packet from Host\n");
-						//this->connectSocket = iter->second;
-						
-						//If CONNECTION_ACCEPTED is recived, add the host socket
-						this->connectedClients.insert(pair<unsigned int, SOCKET>(this->client_id, iter->second));
-						printf("client %d has been connected to the server\n", this->client_id);
-						this->client_id++;
 
-						//Test
 						//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 						this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
 						this->testID++;
