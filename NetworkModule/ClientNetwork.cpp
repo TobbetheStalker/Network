@@ -366,7 +366,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			}
 			else
 			{
-				printf("Unkown packet size of package\n");
+				printf("Unkown packet size of package, Size: &d\n",data_length);
 			}
 	}
 }

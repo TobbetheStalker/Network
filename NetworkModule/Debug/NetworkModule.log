@@ -1,6 +1,8 @@
 ﻿  ClientNetwork.cpp
 c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(286): warning C4018: '<': signed/unsigned mismatch
 c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(354): warning C4018: '<': signed/unsigned mismatch
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(369): warning C4474: 'printf' : too many arguments passed for format string
+  c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(369): note: placeholders and their parameters expect 0 variadic arguments, but 1 were provided
 c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(266): warning C4101: 'header': unreferenced local variable
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)
