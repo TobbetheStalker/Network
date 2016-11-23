@@ -203,7 +203,7 @@ void ClientNetwork::SendFlagPackage(PacketTypes type)
 
 	packet.serialize(packet_data);
 	
-	int nrOfBytesSent = NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
+	this->SendToAll(packet_data, packet_size);
 }
 
 void ClientNetwork::SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
@@ -215,7 +215,7 @@ void ClientNetwork::SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newP
 
 	packet.serialize(packet_data);
 
-	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
+	this->SendToAll(packet_data, packet_size);
 }
 
 bool ClientNetwork::AcceptNewClient(unsigned int & id)
