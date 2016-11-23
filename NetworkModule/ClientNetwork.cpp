@@ -186,7 +186,7 @@ void ClientNetwork::Join(char* ip)
 	//Testing sending init packet
 	//this->SendFlagPackage(INIT_CONNECTION);
 	this->SendFlagPackage(CONNECTION_REQUEST);
-	printf("Sent INIT_CONNECTION to host\n");
+	printf("Sent CONNECTION_REQUEST to host\n");
 
 	this->connectedClients.insert(pair<unsigned int, SOCKET>(this->client_id, this->connectSocket));
 	this->client_id++;
@@ -229,9 +229,11 @@ bool ClientNetwork::AcceptNewClient(unsigned int & id)
 		//disable nagle on the client's socket
 		char value = 1;
 		setsockopt(otherClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof(value));	//TCP Options
-																						// insert new client into session id table
+																						
+		// insert new client into session id table 
 		this->connectedClients.insert(pair<unsigned int, SOCKET>(id, otherClientSocket));
 		this->client_id++;
+
 		return true;
 	}
 
