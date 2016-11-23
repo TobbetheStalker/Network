@@ -18,8 +18,7 @@ bool ClientNetwork::Initialize()
 
 	int iResult;	// for error checking return values
 
-					// address info for the server to listen to
-	struct addrinfo *result = NULL;
+	struct addrinfo *result = NULL; // address info for the server to listen to
 	struct addrinfo hints;
 
 	// Initialize Winsock
@@ -194,7 +193,7 @@ void ClientNetwork::Join(char* ip)
 	printf("Sent CONNECTION_REQUEST to host\n");
 
 	this->connectedClients.insert(pair<unsigned int, SOCKET>(this->client_id, this->connectSocket));
-	printf("client %d has been connected to the server\n", this->client_id);
+	printf("client %d has been connected to the this client\n", this->client_id);
 	this->client_id++;
 
 }
@@ -264,10 +263,7 @@ int ClientNetwork::ReceiveData(unsigned int client_id, char * recvbuf)
 
 void ClientNetwork::ReadMessagesFromClients()
 {
-	Packet packet;
 	char network_data[MAX_PACKET_SIZE];
-	EntityPacket eP;
-	PacketTypes header;
 
 	// go through all clients
 	std::map<unsigned int, SOCKET>::iterator iter;
@@ -289,6 +285,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			{
 				while (i < (unsigned int)data_length)
 				{
+					Packet packet;
 					packet.deserialize(&(network_data[i]));	//Deserialize as a Packet
 					i += data_length;
 
@@ -311,7 +308,6 @@ void ClientNetwork::ReadMessagesFromClients()
 						//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 						this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
 						this->testID++;
-
 
 						iter++;
 						break;
@@ -349,6 +345,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 				while (i < (unsigned int)data_length)
 				{
+					EntityPacket eP;
 					eP.deserialize(&(network_data[i]));
 					i += data_length;
 

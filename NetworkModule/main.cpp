@@ -22,7 +22,8 @@ int main()
 	cN.Shutdown();
 	// create thread with arbitrary argument for the run function
 	//HANDLE serverThread = (HANDLE)_beginthread(clientLoop1, 0, (void*)12);
-	system("pause");
+
+	system("pause");	
 
 }
 
@@ -33,7 +34,7 @@ void clientLoop1(void*)
 
 	start = std::clock();
 
-	while (duration < 100)
+	while (duration < 5)
 	{
 		cN.Update();
 		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;

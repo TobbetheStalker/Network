@@ -20,6 +20,8 @@ struct Packet
 {
 	unsigned int packet_type;	//PacketType enums
 
+	virtual ~Packet() {};
+
 	void serialize(char * data) 
 	{			//Turn the PacketType into bytes
 		memcpy(data, this, sizeof(Packet));
@@ -38,6 +40,8 @@ struct EntityPacket
 	DirectX::XMFLOAT3 newVelocity;			// 12
 	DirectX::XMFLOAT3 newRotation;			// 12
 	DirectX::XMFLOAT3 newRotationVelocity;	// 12
+
+	virtual ~EntityPacket() {};
 
 	void serialize(char * data)
 	{			//Turn the PacketType into bytes
