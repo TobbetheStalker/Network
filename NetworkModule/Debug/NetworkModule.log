@@ -1,11 +1,5 @@
-﻿  main.cpp
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\main.cpp(15): warning C4101: 'result': unreferenced local variable
-  ClientNetwork.cpp
+﻿  ClientNetwork.cpp
 c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(280): warning C4018: '<': signed/unsigned mismatch
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(348): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(348): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'double'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(348): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'double'
 c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(262): warning C4101: 'header': unreferenced local variable
-  Generating Code...
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)

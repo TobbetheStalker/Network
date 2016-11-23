@@ -277,84 +277,87 @@ void ClientNetwork::ReadMessagesFromClients()
 
 		printf("Data_size: %d, PacketClassSize: %d\n", data_length, sizeof(Packet) );
 		int i = 0;
-		while (i < (unsigned int)data_length)
-		{
-
+		
 			if (data_length == 4) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
 			{
-				packet.deserialize(&(network_data[i]));	//Deserialize as a Packet
-				i += data_length;
-
-				switch (packet.packet_type) 
+				while (i < (unsigned int)data_length)
 				{
+					packet.deserialize(&(network_data[i]));	//Deserialize as a Packet
+					i += data_length;
 
-				case CONNECTION_REQUEST:
+					switch (packet.packet_type)
+					{
 
-					printf("Host received connection packet from client\n");
-					this->connectSocket = iter->second;
-					this->SendFlagPackage(CONNECTION_ACCEPTED);	//Tell the connected client that it is accepted
+					case CONNECTION_REQUEST:
 
-					iter++;
-					break;
+						printf("Host received connection packet from client\n");
+						this->connectSocket = iter->second;
+						this->SendFlagPackage(CONNECTION_ACCEPTED);	//Tell the connected client that it is accepted
 
-				case CONNECTION_ACCEPTED:
-					printf("Client received CONNECTION_ACCEPTED packet from Host\n");
-					this->connectSocket = iter->second;
-					//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
-					
-					//Test
-					this->SendEntityUpdatePackage(this->testID,this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
-					this->testID++;
+						iter++;
+						break;
+
+					case CONNECTION_ACCEPTED:
+						printf("Client received CONNECTION_ACCEPTED packet from Host\n");
+						this->connectSocket = iter->second;
+						//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
+
+						//Test
+						this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
+						this->testID++;
 
 
-					iter++;
-					break;
+						iter++;
+						break;
 
-				case ACTION_EVENT:
+					case ACTION_EVENT:
 
-					printf("received action event packet\n");
-					this->connectSocket = iter->second;
-					this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
+						printf("received action event packet\n");
+						this->connectSocket = iter->second;
+						this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 
-					iter++;
-					break;
+						iter++;
+						break;
 
-				case DISCONNECT_REQUEST:
-					printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
-					this->connectSocket = iter->second;
-					this->SendFlagPackage(DISCONNECT_ACCEPTED);
-					this->RemoveClient(iter->first);	//Send the clientID
-					iter = this->connectedClients.end();
-					break;
+					case DISCONNECT_REQUEST:
+						printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
+						this->connectSocket = iter->second;
+						this->SendFlagPackage(DISCONNECT_ACCEPTED);
+						this->RemoveClient(iter->first);	//Send the clientID
+						iter = this->connectedClients.end();
+						break;
 
-				case DISCONNECT_ACCEPTED:
-					printf("Client recived: DISCONNECT_ACCEPTED\n");
-					this->RemoveClient(iter->first);	//Send the clientID
-					iter = this->connectedClients.end();
-					break;
+					case DISCONNECT_ACCEPTED:
+						printf("Client recived: DISCONNECT_ACCEPTED\n");
+						this->RemoveClient(iter->first);	//Send the clientID
+						iter = this->connectedClients.end();
+						break;
 
-				default:
-					printf("error in Reading Flag Packet\n");
+					default:
+						printf("error in Reading Flag Packet\n");
+					}
 				}
 			}
 			else if (data_length == 52)	// 52 bytes is a EntityPacket
 			{
 
-				eP.deserialize(&(network_data[i]));
-				i += data_length;
+				while (i < (unsigned int)data_length)
+				{
+					eP.deserialize(&(network_data[i]));
+					i += data_length;
 
-				//Test
-				printf("Recived EntityPacket with ID: %d\n", eP.EntityID);
-				printf("X:%f, Y:%f, Z:%f\n", eP.newPos.x, eP.newPos.y, eP.newPos.z);
-				this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
-				this->testID++;
+					//Test
+					printf("Recived EntityPacket with ID: %d\n", eP.EntityID);
+					printf("X:%f, Y:%f, Z:%f\n", eP.newPos.x, eP.newPos.y, eP.newPos.z);
+					this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
+					this->testID++;
+				}
 				
 			}
 			else
 			{
 				printf("Unkown packet size of package\n");
 			}
-		}
 	}
 }
 
