@@ -44,7 +44,7 @@ public:
 	//Public package functions (send to all other clients e.g the other player)
 	void SendFlagPackage(PacketTypes type);
 	void SendEntityUpdatePackage(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
-	void SendAnimationPacket();
+	void SendAnimationPacket(unsigned int entityID);
 	void SendStatePacket(unsigned int entityID, bool newState);
 
 

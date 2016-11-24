@@ -53,6 +53,7 @@ struct EntityPacket
 
 struct AnimationPacket
 {
+	unsigned int entityID;
 
 	void serialize(char * data)
 	{
@@ -67,7 +68,7 @@ struct AnimationPacket
 
 struct StatePacket
 {
-	unsigned int ID;
+	unsigned int entityID;
 	bool newState;
 
 	void serialize(char * data)

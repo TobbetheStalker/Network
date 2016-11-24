@@ -224,12 +224,13 @@ void ClientNetwork::SendEntityUpdatePackage(unsigned int entityID, DirectX::XMFL
 	this->SendToAll(packet_data, packet_size);
 }
 
-void ClientNetwork::SendAnimationPacket()
+void ClientNetwork::SendAnimationPacket(unsigned int entityID)
 {
 	const unsigned int packet_size = sizeof(AnimationPacket);
 	char packet_data[packet_size];
 
 	AnimationPacket packet;
+	packet.entityID = entityID;
 
 	packet.serialize(packet_data);
 	this->SendToAll(packet_data, packet_size);
@@ -307,6 +308,8 @@ void ClientNetwork::ReadMessagesFromClients()
 
 		int i = 0;
 		
+		printf("aP: %d, sP: %d", sizeof(AnimationPacket), sizeof(StatePacket));
+
 		if (data_length == sizeof(FlagPacket)) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
 			{
 				while (i < (unsigned int)data_length)
@@ -332,7 +335,9 @@ void ClientNetwork::ReadMessagesFromClients()
 						printf("Client received CONNECTION_ACCEPTED packet from Host\n");
 
 						//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
-						this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
+						//this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
+						this->SendAnimationPacket(this->testID);
+						this->SendStatePacket(this->testID, false);
 						this->testID++;
 
 						iter++;
@@ -391,6 +396,7 @@ void ClientNetwork::ReadMessagesFromClients()
 					aP.deserialize(&(network_data[i]));
 					i += data_length;
 
+					printf("Recived a AnimationPacket with ID: %d\n", aP.entityID);
 
 					//Do something
 
@@ -403,6 +409,8 @@ void ClientNetwork::ReadMessagesFromClients()
 					StatePacket sP;
 					sP.deserialize(&(network_data[i]));
 					i += data_length;
+
+					printf("Recived a StatePacket with ID: %d, %d\n", sP.entityID, sP.newState);
 
 					//Do something
 
