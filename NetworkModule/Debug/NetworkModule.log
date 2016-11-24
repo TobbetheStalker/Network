@@ -1,7 +1,2 @@
-﻿  ClientNetwork.cpp
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(315): warning C4018: '<': signed/unsigned mismatch
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(377): warning C4018: '<': signed/unsigned mismatch
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(393): warning C4018: '<': signed/unsigned mismatch
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(407): warning C4018: '<': signed/unsigned mismatch
-  NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
+﻿  NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)

@@ -243,7 +243,7 @@ void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
 
 	StatePacket packet;
 	packet.entityID = entityID;
-	packet.newState = newState;
+//	packet.newState = newState;
 
 	packet.serialize(packet_data);
 	this->SendToAll(packet_data, packet_size);
@@ -291,7 +291,9 @@ int ClientNetwork::ReceiveData(unsigned int client_id, char * recvbuf)
 void ClientNetwork::ReadMessagesFromClients()
 {
 	char network_data[MAX_PACKET_SIZE];
-
+	bool t = true;
+	//printf("bool: %d"), (unsigned int)sizeof(bool);
+	printf("aP: %d, sP: %d\n", sizeof(AnimationPacket), sizeof(StatePacket));
 	// go through all clients
 	std::map<unsigned int, SOCKET>::iterator iter;
 
@@ -308,7 +310,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 		int i = 0;
 		
-		printf("aP: %d, sP: %d\n", sizeof(AnimationPacket), sizeof(StatePacket));
+		
 
 		if (data_length == sizeof(FlagPacket)) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
 			{
@@ -410,7 +412,7 @@ void ClientNetwork::ReadMessagesFromClients()
 					sP.deserialize(&(network_data[i]));
 					i += data_length;
 
-					printf("Recived a StatePacket with ID: %d, %d\n", sP.entityID, sP.newState);
+	//				printf("Recived a StatePacket with ID: %d, %d\n", sP.entityID, sP.newState);
 
 					//Do something
 

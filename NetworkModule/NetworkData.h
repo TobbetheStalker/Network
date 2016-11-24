@@ -16,9 +16,9 @@ enum PacketTypes {
 
 };
 
-struct FlagPacket 
+struct FlagPacket				// 4
 {
-	unsigned int packet_type;	//PacketType enums
+	unsigned int packet_type;	// 4
 
 	void serialize(char * data) 
 	{			//Turn the PacketType into bytes
@@ -51,10 +51,9 @@ struct EntityPacket
 
 };
 
-struct AnimationPacket	//6
+struct AnimationPacket	//4
 {
 	unsigned int entityID;	//4
-	char padding[2];		//2
 
 	void serialize(char * data)
 	{
@@ -67,10 +66,10 @@ struct AnimationPacket	//6
 	}
 };
 
-struct StatePacket			//12
+struct StatePacket			//8
 {
 	unsigned int entityID;	//4
-	bool newState;			//8
+	bool newState;			//4
 
 	void serialize(char * data)
 	{
