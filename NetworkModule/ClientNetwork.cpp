@@ -308,7 +308,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 		int i = 0;
 		
-		printf("aP: %d, sP: %d", sizeof(AnimationPacket), sizeof(StatePacket));
+		printf("aP: %d, sP: %d\n", sizeof(AnimationPacket), sizeof(StatePacket));
 
 		if (data_length == sizeof(FlagPacket)) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
 			{
@@ -337,7 +337,7 @@ void ClientNetwork::ReadMessagesFromClients()
 						//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 						//this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
 						this->SendAnimationPacket(this->testID);
-						this->SendStatePacket(this->testID, false);
+						this->SendStatePacket(this->testID, true);
 						this->testID++;
 
 						iter++;

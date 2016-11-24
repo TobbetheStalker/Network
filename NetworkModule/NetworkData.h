@@ -51,9 +51,10 @@ struct EntityPacket
 
 };
 
-struct AnimationPacket
+struct AnimationPacket	//6
 {
-	unsigned int entityID;
+	unsigned int entityID;	//4
+	char padding[2];		//2
 
 	void serialize(char * data)
 	{
@@ -66,10 +67,10 @@ struct AnimationPacket
 	}
 };
 
-struct StatePacket
+struct StatePacket			//12
 {
-	unsigned int entityID;
-	bool newState;
+	unsigned int entityID;	//4
+	bool newState;			//8
 
 	void serialize(char * data)
 	{
