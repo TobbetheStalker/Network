@@ -242,7 +242,7 @@ void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
 	char packet_data[packet_size];
 
 	StatePacket packet;
-	packet.ID = entityID;
+	packet.entityID = entityID;
 	packet.newState = newState;
 
 	packet.serialize(packet_data);
