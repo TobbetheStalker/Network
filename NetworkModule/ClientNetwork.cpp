@@ -104,9 +104,6 @@ bool ClientNetwork::Shutdown()
 
 void ClientNetwork::Update()
 {
-	//Check for new clients
-	int nrOfPackages = 0;
-	
 	// Get any new clients
 	this->AcceptNewClient(this->client_id);
 
@@ -182,13 +179,13 @@ void ClientNetwork::Join(char* ip)
 	}
 
 	//Send CONNECTION_REQUEST package
-	const unsigned int packet_size = sizeof(Packet);
+	const unsigned int packet_size = sizeof(FlagPacket);
 	char packet_data[packet_size];
 
-	Packet packet = this->Packet_Flag(CONNECTION_REQUEST);
+	FlagPacket packet;
+	packet.packet_type = CONNECTION_REQUEST;
 
 	packet.serialize(packet_data);
-
 	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
 	printf("Sent CONNECTION_REQUEST to host\n");
 
@@ -200,25 +197,54 @@ void ClientNetwork::Join(char* ip)
 
 void ClientNetwork::SendFlagPackage(PacketTypes type)
 {
-	const unsigned int packet_size = sizeof(Packet);
+	const unsigned int packet_size = sizeof(FlagPacket);
 	char packet_data[packet_size];
 
-	Packet packet = this->Packet_Flag(type);
+	//Fill the packet
+	FlagPacket packet;
+	packet.packet_type = type;
 
 	packet.serialize(packet_data);
-	
 	this->SendToAll(packet_data, packet_size);
 }
 
-void ClientNetwork::SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
+void ClientNetwork::SendEntityUpdatePackage(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
 {
 	const unsigned int packet_size = sizeof(EntityPacket);
 	char packet_data[packet_size];
 
-	EntityPacket packet = this->Packet_EntityUpdate(entityID, newPos, newVelocity, newRotation, newRotationVelocity);
+	EntityPacket packet;
+	packet.EntityID = entityID;
+	packet.newPos = newPos;
+	packet.newRotation = newRotation;
+	packet.newRotationVelocity = newRotationVelocity;
+	packet.newVelocity = newVelocity;
 
 	packet.serialize(packet_data);
+	this->SendToAll(packet_data, packet_size);
+}
 
+void ClientNetwork::SendAnimationPacket()
+{
+	const unsigned int packet_size = sizeof(AnimationPacket);
+	char packet_data[packet_size];
+
+	AnimationPacket packet;
+
+	packet.serialize(packet_data);
+	this->SendToAll(packet_data, packet_size);
+}
+
+void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
+{
+	const unsigned int packet_size = sizeof(StatePacket);
+	char packet_data[packet_size];
+
+	StatePacket packet;
+	packet.ID = entityID;
+	packet.newState = newState;
+
+	packet.serialize(packet_data);
 	this->SendToAll(packet_data, packet_size);
 }
 
@@ -281,11 +307,11 @@ void ClientNetwork::ReadMessagesFromClients()
 
 		int i = 0;
 		
-		if (data_length == sizeof(Packet)) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
+		if (data_length == sizeof(FlagPacket)) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
 			{
 				while (i < (unsigned int)data_length)
 				{
-					Packet packet;
+					FlagPacket packet;
 					packet.deserialize(&(network_data[i]));	//Deserialize as a Packet
 					i += data_length;
 
@@ -357,30 +383,37 @@ void ClientNetwork::ReadMessagesFromClients()
 				}
 				
 			}
+			else if (data_length == sizeof(AnimationPacket))
+			{
+				while(i < (unsigned int)data_length)
+				{
+					AnimationPacket aP;
+					aP.deserialize(&(network_data[i]));
+					i += data_length;
+
+
+					//Do something
+
+				}
+			}
+			else if (data_length == sizeof(StatePacket))
+			{
+				while (i < (unsigned int)data_length)
+				{
+					StatePacket sP;
+					sP.deserialize(&(network_data[i]));
+					i += data_length;
+
+					//Do something
+
+
+				}
+			}
 			else
 			{
 				printf("Unkown packet size of package, Size: %d\n",data_length);
 			}
 	}
-}
-
-Packet ClientNetwork::Packet_Flag(PacketTypes type)
-{
-	Packet packet;
-	packet.packet_type = type;
-	return packet;
-}
-
-EntityPacket ClientNetwork::Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
-{
-	EntityPacket packet;
-	packet.EntityID = entityID;
-	packet.newPos = newPos;
-	packet.newRotation = newRotation;
-	packet.newRotationVelocity = newRotationVelocity;
-	packet.newVelocity = newVelocity;
-
-	return packet;
 }
 
 void ClientNetwork::SendToAll(char * packets, int totalSize)

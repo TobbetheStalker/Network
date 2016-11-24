@@ -27,10 +27,6 @@ private:
 	bool RemoveClient(unsigned int clientID);
 	void ReadMessagesFromClients();
 
-	//Create packages helper functions
-	Packet Packet_Flag(PacketTypes type);	//Send a packet with only a header and and empty data
-	EntityPacket Packet_EntityUpdate(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
-
 	//Test
 	int testID = 0;
 	DirectX::XMFLOAT3 testFloat3 = DirectX::XMFLOAT3(1.f,2.f,3.f);
@@ -45,10 +41,11 @@ public:
 	void Update();
 	void Join(char* ip);
 
-	//Public package functions
+	//Public package functions (send to all other clients e.g the other player)
 	void SendFlagPackage(PacketTypes type);
-	void SendEntityUpdatePackage(int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
-	
+	void SendEntityUpdatePackage(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
+	void SendAnimationPacket();
+	void SendStatePacket(unsigned int entityID, bool newState);
 
 
 
