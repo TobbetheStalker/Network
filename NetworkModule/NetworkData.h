@@ -17,24 +17,32 @@ enum PacketTypes {
 
 };
 
-struct FlagPacket				// 4
+struct Packet
+{
+	virtual void serialize(char * data) = 0;
+	virtual void deserialize(char * data) = 0;
+
+};
+
+
+struct FlagPacket : public Packet				// 4
 {
 	PacketTypes packet_type;	// 4
 
-	virtual void serialize(char * data) 
+	void serialize(char * data) 
 	{			//Turn the PacketType into bytes
 		memcpy(data, this, sizeof(FlagPacket));
 	}
 
-	virtual void deserialize(char * data)
+	void deserialize(char * data)
 	{			//Turn bytes into PacketType
 		memcpy(this, data, sizeof(FlagPacket));
 	}
 };
 
-struct EntityPacket: public FlagPacket
+struct EntityPacket: public Packet
 {											// nummber of bytes:
-	//PacketTypes packet_type;
+	PacketTypes packet_type;
 	unsigned int entityID;					// 4
 	DirectX::XMFLOAT3 newPos;				// 12
 	DirectX::XMFLOAT3 newVelocity;			// 12
@@ -53,9 +61,9 @@ struct EntityPacket: public FlagPacket
 
 };
 
-struct AnimationPacket : public FlagPacket
+struct AnimationPacket : public Packet
 {
-	//PacketTypes packet_type;
+	PacketTypes packet_type;
 	unsigned int entityID;	//4
 
 	void serialize(char * data)
@@ -69,9 +77,9 @@ struct AnimationPacket : public FlagPacket
 	}
 };
 
-struct StatePacket : public FlagPacket
+struct StatePacket : public Packet
 {
-	//PacketTypes packet_type;
+	PacketTypes packet_type;
 	unsigned int entityID;	//4
 	bool newState;			//4
 
