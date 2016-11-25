@@ -13,6 +13,8 @@ enum PacketTypes {
 	DISCONNECT_REQUEST = 3,
 	DISCONNECT_ACCEPTED = 4,
 	ENTITY_UPDATE = 5,
+	ANIMATION_UPDATE = 6,
+	STATE_UPDATE = 7,
 
 };
 
@@ -33,6 +35,7 @@ struct FlagPacket				// 4
 
 struct EntityPacket
 {											// nummber of bytes:
+	PacketTypes packet_type;
 	unsigned int EntityID;					// 4
 	DirectX::XMFLOAT3 newPos;				// 12
 	DirectX::XMFLOAT3 newVelocity;			// 12
@@ -53,6 +56,7 @@ struct EntityPacket
 
 struct AnimationPacket	//4
 {
+	PacketTypes packet_type;
 	unsigned int entityID;	//4
 
 	void serialize(char * data)
@@ -68,6 +72,7 @@ struct AnimationPacket	//4
 
 struct StatePacket			//8
 {
+	PacketTypes packet_type;
 	unsigned int entityID;	//4
 	bool newState;			//4
 

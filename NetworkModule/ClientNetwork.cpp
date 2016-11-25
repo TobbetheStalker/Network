@@ -214,6 +214,7 @@ void ClientNetwork::SendEntityUpdatePackage(unsigned int entityID, DirectX::XMFL
 	char packet_data[packet_size];
 
 	EntityPacket packet;
+	packet.packet_type = ENTITY_UPDATE;
 	packet.EntityID = entityID;
 	packet.newPos = newPos;
 	packet.newRotation = newRotation;
@@ -230,6 +231,7 @@ void ClientNetwork::SendAnimationPacket(unsigned int entityID)
 	char packet_data[packet_size];
 
 	AnimationPacket packet;
+	packet.packet_type = ANIMATION_UPDATE;
 	packet.entityID = entityID;
 
 	packet.serialize(packet_data);
@@ -242,6 +244,7 @@ void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
 	char packet_data[packet_size];
 
 	StatePacket packet;
+	packet.packet_type = STATE_UPDATE;
 	packet.entityID = entityID;
 //	packet.newState = newState;
 
@@ -292,29 +295,104 @@ void ClientNetwork::ReadMessagesFromClients()
 {
 	char network_data[MAX_PACKET_SIZE];
 	bool t = true;
-	PacketTypes header;
+	unsigned int header = -1;
 
-	printf("fP: %d, eP, %d aP: %d, sP: %d\n", sizeof(FlagPacket), sizeof(EntityPacket), sizeof(AnimationPacket), sizeof(StatePacket));
+	//printf("PT: %d, fP: %d, eP, %d aP: %d, sP: %d\n",sizeof(PacketTypes), sizeof(FlagPacket), sizeof(EntityPacket), sizeof(AnimationPacket), sizeof(StatePacket));
 	// go through all clients
 	std::map<unsigned int, SOCKET>::iterator iter;
 
-	for (iter =this->connectedClients.begin(); iter != this->connectedClients.end();)
+	for (iter = this->connectedClients.begin(); iter != this->connectedClients.end();)
 	{
 		// get data for that client
 		int data_length = this->ReceiveData(iter->first, network_data);
 
 		if (data_length <= 0)
 		{
-			//no data recieved
+			//no data recieved exit function
 			continue;
 		}
 
-		int i = 0;
-		
-		for (int j = 0; j < sizeof(PacketTypes); j++) {
-			memcpy(&header, &(network_data[j]), sizeof(PacketTypes));
-		}
+		//Read the header (the first 4 bytes)
+		memcpy(&header, &(network_data), sizeof(PacketTypes));
 
+		switch (header)
+		{
+
+		case CONNECTION_REQUEST:
+
+			printf("Host received connection packet from client\n");
+
+			this->SendFlagPackage(CONNECTION_ACCEPTED);
+
+			iter++;
+			break;
+
+		case CONNECTION_ACCEPTED:
+
+			printf("Client received CONNECTION_ACCEPTED packet from Host\n");
+
+			//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
+			//this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
+			this->SendAnimationPacket(this->testID);
+			this->SendStatePacket(this->testID, true);
+			this->testID++;
+
+			iter++;
+			break;
+
+		case ACTION_EVENT:
+
+			printf("received action event packet\n");
+			//this->connectSocket = iter->second;
+			this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
+
+			iter++;
+			break;
+
+		case DISCONNECT_REQUEST:
+			
+			printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
+			
+			this->SendFlagPackage(DISCONNECT_ACCEPTED);
+			this->RemoveClient(iter->first);	//Send the clientID
+			
+			iter = this->connectedClients.end();
+			break;
+
+		case DISCONNECT_ACCEPTED:
+			
+			printf("Client recived: DISCONNECT_ACCEPTED\n");
+			this->RemoveClient(iter->first);	//Send the clientID
+			iter = this->connectedClients.end();
+			break;
+
+		case ENTITY_UPDATE:
+
+			printf("Recived ENTITY_UPDATE packet\n");
+
+			iter++;
+			break;
+
+		case ANIMATION_UPDATE:
+
+			printf("Recived ENTITY_UPDATE packet\n");
+
+			iter++;
+			break;
+
+		case STATE_UPDATE:
+
+			printf("Recived ENTITY_UPDATE packet\n");
+
+			iter++;
+			break;
+		
+		default:
+			printf("Unkown packet type %d\n", header);
+		}
+	}
+
+		/*
 		if (data_length == sizeof(FlagPacket)) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
 			{
 				while (i < (unsigned int)data_length)
@@ -426,8 +504,10 @@ void ClientNetwork::ReadMessagesFromClients()
 			{
 				printf("Unkown packet size of package, Size: %d\n",data_length);
 			}
-	}
+	
+	*/
 }
+
 
 void ClientNetwork::SendToAll(char * packets, int totalSize)
 {
