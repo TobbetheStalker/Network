@@ -296,6 +296,9 @@ void ClientNetwork::ReadMessagesFromClients()
 	char network_data[MAX_PACKET_SIZE];
 	bool t = true;
 	unsigned int header = -1;
+	EntityPacket eP;
+	AnimationPacket aP;
+	StatePacket sP;
 
 	//printf("PT: %d, fP: %d, eP, %d aP: %d, sP: %d\n",sizeof(PacketTypes), sizeof(FlagPacket), sizeof(EntityPacket), sizeof(AnimationPacket), sizeof(StatePacket));
 	// go through all clients
@@ -370,7 +373,7 @@ void ClientNetwork::ReadMessagesFromClients()
 		case ENTITY_UPDATE:
 
 			printf("Recived ENTITY_UPDATE packet\n");
-			EntityPacket eP;
+
 			eP.deserialize(network_data);
 			
 			printf("EntityID: %d\n", eP.entityID);
@@ -382,7 +385,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			printf("Recived ANIMATION_UPDATE packet\n");
 
-			AnimationPacket aP;
+			
 			aP.deserialize(network_data);
 
 			printf("EntityID: %d\n", aP.entityID);
@@ -393,7 +396,7 @@ void ClientNetwork::ReadMessagesFromClients()
 		case STATE_UPDATE:
 
 			printf("Recived STATE_UPDATE packet\n");
-			StatePacket sP;
+			
 			sP.deserialize(network_data);
 			printf("StateID: %d\n", aP.entityID);
 
