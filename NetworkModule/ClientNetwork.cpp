@@ -296,7 +296,6 @@ void ClientNetwork::ReadMessagesFromClients()
 	char network_data[MAX_PACKET_SIZE];
 	bool t = true;
 	unsigned int header = -1;
-	FlagPacket fP;
 	EntityPacket eP;
 	AnimationPacket aP;
 	StatePacket sP;
@@ -316,10 +315,11 @@ void ClientNetwork::ReadMessagesFromClients()
 			continue;
 		}
 
+		printf("Data_length: %d\n", data_length);
 		//Read the header (the first 4 bytes)
-		memcpy(&fP, &(network_data), sizeof(FlagPacket));
+		memcpy(&header, &(network_data), sizeof(PacketTypes));
 
-		switch (fP.packet_type)
+		switch (header)
 		{
 
 		case CONNECTION_REQUEST:
