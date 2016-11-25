@@ -246,7 +246,7 @@ void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
 	StatePacket packet;
 	packet.packet_type = STATE_UPDATE;
 	packet.entityID = entityID;
-//	packet.newState = newState;
+	packet.newState = newState;
 
 	packet.serialize(packet_data);
 	this->SendToAll(packet_data, packet_size);
