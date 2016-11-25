@@ -65,6 +65,8 @@ struct AnimationPacket : public Packet
 {
 	PacketTypes packet_type;
 	unsigned int entityID;	//4
+	unsigned int state;		//Will be changed to enum at a later date
+	unsigned int keyframe;
 
 	void serialize(char * data)
 	{
