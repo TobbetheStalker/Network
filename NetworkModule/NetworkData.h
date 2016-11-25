@@ -18,7 +18,7 @@ enum PacketTypes {
 
 struct FlagPacket				// 4
 {
-	unsigned int packet_type;	// 4
+	PacketTypes packet_type;	// 4
 
 	void serialize(char * data) 
 	{			//Turn the PacketType into bytes

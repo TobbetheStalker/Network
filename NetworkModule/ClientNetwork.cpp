@@ -292,8 +292,9 @@ void ClientNetwork::ReadMessagesFromClients()
 {
 	char network_data[MAX_PACKET_SIZE];
 	bool t = true;
-	//printf("bool: %d"), (unsigned int)sizeof(bool);
-	printf("aP: %d, sP: %d\n", sizeof(AnimationPacket), sizeof(StatePacket));
+	PacketTypes header;
+
+	printf("fP: %d, eP, %d aP: %d, sP: %d\n", sizeof(FlagPacket), sizeof(EntityPacket), sizeof(AnimationPacket), sizeof(StatePacket));
 	// go through all clients
 	std::map<unsigned int, SOCKET>::iterator iter;
 
@@ -310,7 +311,9 @@ void ClientNetwork::ReadMessagesFromClients()
 
 		int i = 0;
 		
-		
+		for (int j = 0; j < sizeof(PacketTypes); j++) {
+			memcpy(&header, &(network_data[j]), sizeof(PacketTypes));
+		}
 
 		if (data_length == sizeof(FlagPacket)) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
 			{
