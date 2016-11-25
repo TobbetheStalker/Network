@@ -214,7 +214,7 @@ void ClientNetwork::SendEntityUpdatePackage(unsigned int entityID, DirectX::XMFL
 	char packet_data[packet_size];
 
 	EntityPacket packet;
-	packet.packet_type = ENTITY_UPDATE;
+	packet.packet_type = UPDATE_ENTITY;
 	packet.entityID = entityID;
 	packet.newPos = newPos;
 	packet.newRotation = newRotation;
@@ -231,7 +231,7 @@ void ClientNetwork::SendAnimationPacket(unsigned int entityID)
 	char packet_data[packet_size];
 
 	AnimationPacket packet;
-	packet.packet_type = ANIMATION_UPDATE;
+	packet.packet_type = UPDATE_ANIMATION;
 	packet.entityID = entityID;
 
 	packet.serialize(packet_data);
@@ -244,7 +244,7 @@ void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
 	char packet_data[packet_size];
 
 	StatePacket packet;
-	packet.packet_type = STATE_UPDATE;
+	packet.packet_type = UPDATE_STATE;
 	packet.entityID = entityID;
 	packet.newState = newState;
 
@@ -370,7 +370,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			iter = this->connectedClients.end();
 			break;
 
-		case ENTITY_UPDATE:
+		case UPDATE_ENTITY:
 
 			printf("Recived ENTITY_UPDATE packet\n");
 
@@ -381,7 +381,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			iter++;
 			break;
 
-		case ANIMATION_UPDATE:
+		case UPDATE_ANIMATION:
 
 			printf("Recived ANIMATION_UPDATE packet\n");
 
@@ -393,7 +393,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			iter++;
 			break;
 
-		case STATE_UPDATE:
+		case UPDATE_STATE:
 
 			printf("Recived STATE_UPDATE packet\n");
 			
@@ -408,120 +408,6 @@ void ClientNetwork::ReadMessagesFromClients()
 		}
 	}
 
-		/*
-		if (data_length == sizeof(FlagPacket)) //If the data_length is 4 bytes long, we know it is a packet with only a PacketType
-			{
-				while (i < (unsigned int)data_length)
-				{
-					FlagPacket packet;
-					packet.deserialize(&(network_data[i]));	//Deserialize as a Packet
-					i += data_length;
-
-					switch (packet.packet_type)
-					{
-
-					case CONNECTION_REQUEST:
-
-						printf("Host received connection packet from client\n");
-
-						this->SendFlagPackage(CONNECTION_ACCEPTED);
-
-						iter++;
-						break;
-
-					case CONNECTION_ACCEPTED:
-
-						printf("Client received CONNECTION_ACCEPTED packet from Host\n");
-
-						//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
-						//this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
-						this->SendAnimationPacket(this->testID);
-						this->SendStatePacket(this->testID, true);
-						this->testID++;
-
-						iter++;
-						break;
-
-					case ACTION_EVENT:
-
-						printf("received action event packet\n");
-						//this->connectSocket = iter->second;
-						this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
-
-						iter++;
-						break;
-
-					case DISCONNECT_REQUEST:
-						printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
-						//this->connectSocket = iter->second;
-						this->SendFlagPackage(DISCONNECT_ACCEPTED);
-						this->RemoveClient(iter->first);	//Send the clientID
-						iter = this->connectedClients.end();
-						break;
-
-					case DISCONNECT_ACCEPTED:
-						printf("Client recived: DISCONNECT_ACCEPTED\n");
-						this->RemoveClient(iter->first);	//Send the clientID
-						iter = this->connectedClients.end();
-						break;
-
-					default:
-						printf("error in Reading Flag Packet\n");
-					}
-				}
-			}
-			else if (data_length == sizeof(EntityPacket))	// 52 bytes is a EntityPacket
-			{
-
-				while (i < (unsigned int)data_length)
-				{
-					EntityPacket eP;
-					eP.deserialize(&(network_data[i]));
-					i += data_length;
-
-					//Test
-					printf("Recived EntityPacket with ID: %d\n", eP.EntityID);
-					//printf("X:%f, Y:%f, Z:%f\n", eP.newPos.x, eP.newPos.y, eP.newPos.z);
-					this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
-					this->testID++;
-				}
-				
-			}
-			else if (data_length == sizeof(AnimationPacket))
-			{
-				while(i < (unsigned int)data_length)
-				{
-					AnimationPacket aP;
-					aP.deserialize(&(network_data[i]));
-					i += data_length;
-
-					printf("Recived a AnimationPacket with ID: %d\n", aP.entityID);
-
-					//Do something
-
-				}
-			}
-			else if (data_length == sizeof(StatePacket))
-			{
-				while (i < (unsigned int)data_length)
-				{
-					StatePacket sP;
-					sP.deserialize(&(network_data[i]));
-					i += data_length;
-
-	//				printf("Recived a StatePacket with ID: %d, %d\n", sP.entityID, sP.newState);
-
-					//Do something
-
-
-				}
-			}
-			else
-			{
-				printf("Unkown packet size of package, Size: %d\n",data_length);
-			}
-	
-	*/
 }
 
 
