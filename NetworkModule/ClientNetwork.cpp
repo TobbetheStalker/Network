@@ -316,7 +316,7 @@ void ClientNetwork::ReadMessagesFromClients()
 		}
 
 		//Read the header (the first 4 bytes)
-		memcpy(&header, &(network_data), sizeof(PacketTypes));
+		memcpy(&header, &(network_data[4]), sizeof(PacketTypes));
 
 		switch (header)
 		{
