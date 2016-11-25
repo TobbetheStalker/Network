@@ -344,15 +344,6 @@ void ClientNetwork::ReadMessagesFromClients()
 			iter++;
 			break;
 
-		case ACTION_EVENT:
-
-			printf("received action event packet\n");
-			//this->connectSocket = iter->second;
-			this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
-
-			iter++;
-			break;
-
 		case DISCONNECT_REQUEST:
 			
 			printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
