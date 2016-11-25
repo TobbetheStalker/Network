@@ -401,7 +401,6 @@ void ClientNetwork::ReadMessagesFromClients()
 
 }
 
-
 void ClientNetwork::SendToAll(char * packets, int totalSize)
 {
 	SOCKET currentSocket;

@@ -21,20 +21,20 @@ struct FlagPacket				// 4
 {
 	PacketTypes packet_type;	// 4
 
-	void serialize(char * data) 
+	virtual void serialize(char * data) 
 	{			//Turn the PacketType into bytes
 		memcpy(data, this, sizeof(FlagPacket));
 	}
 
-	void deserialize(char * data)
+	virtual void deserialize(char * data)
 	{			//Turn bytes into PacketType
 		memcpy(this, data, sizeof(FlagPacket));
 	}
 };
 
-struct EntityPacket
+struct EntityPacket: public FlagPacket
 {											// nummber of bytes:
-	PacketTypes packet_type;
+	//PacketTypes packet_type;
 	unsigned int entityID;					// 4
 	DirectX::XMFLOAT3 newPos;				// 12
 	DirectX::XMFLOAT3 newVelocity;			// 12
@@ -53,9 +53,9 @@ struct EntityPacket
 
 };
 
-struct AnimationPacket	//4
+struct AnimationPacket : public FlagPacket
 {
-	PacketTypes packet_type;
+	//PacketTypes packet_type;
 	unsigned int entityID;	//4
 
 	void serialize(char * data)
@@ -69,9 +69,9 @@ struct AnimationPacket	//4
 	}
 };
 
-struct StatePacket			//8
+struct StatePacket : public FlagPacket
 {
-	PacketTypes packet_type;
+	//PacketTypes packet_type;
 	unsigned int entityID;	//4
 	bool newState;			//4
 
