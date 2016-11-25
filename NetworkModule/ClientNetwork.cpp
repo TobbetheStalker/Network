@@ -398,7 +398,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			printf("Recived STATE_UPDATE packet\n");
 			
 			sP.deserialize(network_data);
-			printf("StateID: %d\n", eP.entityID);
+			printf("StateID: %d\n", sP.entityID);
 
 			iter++;
 			break;
