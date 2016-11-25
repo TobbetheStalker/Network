@@ -36,7 +36,7 @@ struct FlagPacket				// 4
 struct EntityPacket
 {											// nummber of bytes:
 	PacketTypes packet_type;
-	unsigned int EntityID;					// 4
+	unsigned int entityID;					// 4
 	DirectX::XMFLOAT3 newPos;				// 12
 	DirectX::XMFLOAT3 newVelocity;			// 12
 	DirectX::XMFLOAT3 newRotation;			// 12

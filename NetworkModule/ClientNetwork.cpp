@@ -215,7 +215,7 @@ void ClientNetwork::SendEntityUpdatePackage(unsigned int entityID, DirectX::XMFL
 
 	EntityPacket packet;
 	packet.packet_type = ENTITY_UPDATE;
-	packet.EntityID = entityID;
+	packet.entityID = entityID;
 	packet.newPos = newPos;
 	packet.newRotation = newRotation;
 	packet.newRotationVelocity = newRotationVelocity;
@@ -334,6 +334,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
 			//this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
 			this->SendAnimationPacket(this->testID);
+			this->testID++;
 			this->SendStatePacket(this->testID, true);
 			this->testID++;
 
@@ -369,20 +370,32 @@ void ClientNetwork::ReadMessagesFromClients()
 		case ENTITY_UPDATE:
 
 			printf("Recived ENTITY_UPDATE packet\n");
+			EntityPacket eP;
+			eP.deserialize(network_data);
+			
+			printf("EntityID: %d\n", eP.entityID);
 
 			iter++;
 			break;
 
 		case ANIMATION_UPDATE:
 
-			printf("Recived ENTITY_UPDATE packet\n");
+			printf("Recived ANIMATION_UPDATE packet\n");
+
+			AnimationPacket aP;
+			aP.deserialize(network_data);
+
+			printf("EntityID: %d\n", aP.entityID);
 
 			iter++;
 			break;
 
 		case STATE_UPDATE:
 
-			printf("Recived ENTITY_UPDATE packet\n");
+			printf("Recived STATE_UPDATE packet\n");
+			StatePacket sP;
+			sP.deserialize(network_data);
+			printf("StateID: %d\n", aP.entityID);
 
 			iter++;
 			break;
