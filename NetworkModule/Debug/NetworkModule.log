@@ -1,6 +1,3 @@
-﻿  main.cpp
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\main.cpp(15): warning C4101: 'result': unreferenced local variable
-  ClientNetwork.cpp
-  Generating Code...
+﻿  ClientNetwork.cpp
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)
