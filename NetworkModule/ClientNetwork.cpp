@@ -318,7 +318,7 @@ void ClientNetwork::ReadMessagesFromClients()
 		printf("Data_length: %d\n", data_length);
 		//Read the header (the first 4 bytes)
 		//memcpy(&header, &network_data+4, sizeof(PacketTypes));
-		memmove(&header, network_data+8, sizeof(PacketTypes));
+		memmove(&header, &network_data[4], sizeof(PacketTypes));
 
 		switch (header)
 		{
