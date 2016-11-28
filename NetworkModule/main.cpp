@@ -11,9 +11,15 @@ void clientLoop2(void);
 int main()
 {	
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	char* ip = "192.168.1.141";
+	char* ip = "192.168.1.141";	//141, 25
 	bool result;
 	
+	printf("Size of Packet: %d\n", sizeof(Packet));
+	printf("Size of FlagPacket: %d\n", sizeof(FlagPacket));
+	printf("Size of EntityPacket: %d\n", sizeof(EntityPacket));
+	printf("Size of AnimationPacket: %d\n", sizeof(AnimationPacket));
+	printf("Size of StatePacket: %d\n\n", sizeof(StatePacket));
+
 	cN.Initialize();
 	//cN2.Initialize();
 	//cN.Join(ip);
