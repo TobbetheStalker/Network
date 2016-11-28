@@ -19,6 +19,8 @@ enum PacketTypes {
 
 struct Packet
 {
+	PacketTypes packet_type;	// 4
+
 	virtual void serialize(char * data) = 0;
 	virtual void deserialize(char * data) = 0;
 
@@ -27,7 +29,7 @@ struct Packet
 
 struct FlagPacket : public Packet				// 4
 {
-	PacketTypes packet_type;	// 4
+	//PacketTypes packet_type;	// 4
 
 	void serialize(char * data) 
 	{			//Turn the PacketType into bytes
@@ -42,7 +44,7 @@ struct FlagPacket : public Packet				// 4
 
 struct EntityPacket: public Packet
 {											// nummber of bytes:
-	PacketTypes packet_type;
+	//PacketTypes packet_type;
 	unsigned int entityID;					// 4
 	DirectX::XMFLOAT3 newPos;				// 12
 	DirectX::XMFLOAT3 newVelocity;			// 12
@@ -63,10 +65,10 @@ struct EntityPacket: public Packet
 
 struct AnimationPacket : public Packet
 {
-	PacketTypes packet_type;
-	unsigned int entityID;	//4
+	//PacketTypes packet_type;
+	unsigned int entityID;	//What entity has the skeleton
 	unsigned int state;		//Will be changed to enum at a later date
-	unsigned int keyframe;
+	unsigned int keyframe;	//what frame to go to
 
 	void serialize(char * data)
 	{
@@ -81,7 +83,7 @@ struct AnimationPacket : public Packet
 
 struct StatePacket : public Packet
 {
-	PacketTypes packet_type;
+	//PacketTypes packet_type;
 	unsigned int entityID;	//4
 	bool newState;			//4
 
