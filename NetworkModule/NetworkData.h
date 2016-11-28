@@ -21,60 +21,46 @@ struct Packet
 {
 	PacketTypes packet_type;	// 4
 
-	virtual void serialize(char * data) = 0;
-	virtual void deserialize(char * data) = 0;
-
-};
-
-
-struct FlagPacket : public Packet				// 4
-{
-	//PacketTypes packet_type;	// 4
-
-	void serialize(char * data) 
+	virtual void serialize(char * data)
 	{			//Turn the PacketType into bytes
-		memcpy(data, this, sizeof(FlagPacket));
+		memcpy(data, this, sizeof(Packet));
 	}
 
-	void deserialize(char * data)
+	virtual void deserialize(char * data)
 	{			//Turn bytes into PacketType
-		memcpy(this, data, sizeof(FlagPacket));
+		memcpy(this, data, sizeof(Packet));
 	}
+
 };
 
 struct EntityPacket: public Packet
-{											// nummber of bytes:
-	//PacketTypes packet_type;
-	unsigned int entityID;					// 4
-	DirectX::XMFLOAT3 newPos;				// 12
-	DirectX::XMFLOAT3 newVelocity;			// 12
-	DirectX::XMFLOAT3 newRotation;			// 12
-	DirectX::XMFLOAT3 newRotationVelocity;	// 12
+{											
+	unsigned int entityID;					
+	DirectX::XMFLOAT3 newPos;				
+	DirectX::XMFLOAT3 newVelocity;			
+	DirectX::XMFLOAT3 newRotation;			
+	DirectX::XMFLOAT3 newRotationVelocity;	
 
 	void serialize(char * data)
 	{
 		memcpy(data, this, sizeof(EntityPacket));
 	}
-
 	void deserialize(char * data)
 	{
 		memcpy(this, data, sizeof(EntityPacket));
 	}
-
 };
 
 struct AnimationPacket : public Packet
 {
-	//PacketTypes packet_type;
-	unsigned int entityID;	//What entity has the skeleton
-	unsigned int state;		//Will be changed to enum at a later date
-	unsigned int keyframe;	//what frame to go to
+	unsigned int entityID;	
+	unsigned int state;		
+	unsigned int keyframe;	
 
 	void serialize(char * data)
 	{
 		memcpy(data, this, sizeof(AnimationPacket));
 	}
-
 	void deserialize(char * data)
 	{
 		memcpy(this, data, sizeof(AnimationPacket));
@@ -83,15 +69,13 @@ struct AnimationPacket : public Packet
 
 struct StatePacket : public Packet
 {
-	//PacketTypes packet_type;
-	unsigned int entityID;	//4
-	bool newState;			//4
+	unsigned int entityID;
+	bool newState;		
 
 	void serialize(char * data)
 	{
 		memcpy(data, this, sizeof(StatePacket));
 	}
-
 	void deserialize(char * data)
 	{
 		memcpy(this, data, sizeof(StatePacket));

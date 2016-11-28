@@ -5,6 +5,7 @@
 #include <ws2tcpip.h>
 #include <map>
 #include "NetworkData.h"
+#include <vector>
 
 using namespace std;
 #pragma comment (lib, "Ws2_32.lib")
@@ -19,6 +20,8 @@ private:
 	SOCKET listenSocket;	
 	SOCKET connectSocket; // Socket to listen for new connections	
 	std::map<unsigned int, SOCKET> connectedClients;	// table to keep track of each client's socket
+	std::vector<Packet> packet_Buffer;
+	bool isLocked;
 	unsigned int client_id;
 
 	int ReceiveData(unsigned int client_id, char * recvbuf);
@@ -42,12 +45,12 @@ public:
 	void Join(char* ip);
 
 	//Public package functions (send to all other clients e.g the other player)
-	void SendFlagPackage(PacketTypes type);
-	void SendEntityUpdatePackage(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
+	void SendFlagPacket(PacketTypes type);
+	void SendEntityUpdatePacket(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
 	void SendAnimationPacket(unsigned int entityID);
 	void SendStatePacket(unsigned int entityID, bool newState);
 
-
+	bool isPacketBufferLocked();
 
 };
 

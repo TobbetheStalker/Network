@@ -15,7 +15,6 @@ int main()
 	bool result;
 	
 	printf("Size of Packet: %d\n", sizeof(Packet));
-	printf("Size of FlagPacket: %d\n", sizeof(FlagPacket));
 	printf("Size of EntityPacket: %d\n", sizeof(EntityPacket));
 	printf("Size of AnimationPacket: %d\n", sizeof(AnimationPacket));
 	printf("Size of StatePacket: %d\n\n", sizeof(StatePacket));

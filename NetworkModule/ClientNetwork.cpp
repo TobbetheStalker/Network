@@ -10,6 +10,7 @@ ClientNetwork::~ClientNetwork()
 
 bool ClientNetwork::Initialize()
 {
+	this->isLocked = false;
 	// create WSADATA object
 	WSADATA wsaData;
 	this->client_id = 0;
@@ -179,10 +180,10 @@ void ClientNetwork::Join(char* ip)
 	}
 
 	//Send CONNECTION_REQUEST package
-	const unsigned int packet_size = sizeof(FlagPacket);
+	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
-	FlagPacket packet;
+	Packet packet;
 	packet.packet_type = CONNECTION_REQUEST;
 
 	packet.serialize(packet_data);
@@ -195,20 +196,20 @@ void ClientNetwork::Join(char* ip)
 
 }
 
-void ClientNetwork::SendFlagPackage(PacketTypes type)
+void ClientNetwork::SendFlagPacket(PacketTypes type)
 {
-	const unsigned int packet_size = sizeof(FlagPacket);
+	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
 	//Fill the packet
-	FlagPacket packet;
+	Packet packet;
 	packet.packet_type = type;
 
 	packet.serialize(packet_data);
 	this->SendToAll(packet_data, packet_size);
 }
 
-void ClientNetwork::SendEntityUpdatePackage(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
+void ClientNetwork::SendEntityUpdatePacket(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
 {
 	const unsigned int packet_size = sizeof(EntityPacket);
 	char packet_data[packet_size];
@@ -250,6 +251,11 @@ void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
 
 	packet.serialize(packet_data);
 	this->SendToAll(packet_data, packet_size);
+}
+
+bool ClientNetwork::isPacketBufferLocked()
+{
+	return this->isLocked;
 }
 
 bool ClientNetwork::AcceptNewClient(unsigned int & id)
@@ -296,6 +302,7 @@ void ClientNetwork::ReadMessagesFromClients()
 	char network_data[MAX_PACKET_SIZE];
 	bool t = true;
 	unsigned int header = -1;
+	
 	EntityPacket eP;
 	AnimationPacket aP;
 	StatePacket sP;
@@ -325,8 +332,8 @@ void ClientNetwork::ReadMessagesFromClients()
 		case CONNECTION_REQUEST:
 
 			printf("Host received connection packet from client\n");
-
-			this->SendFlagPackage(CONNECTION_ACCEPTED);
+			
+			this->SendFlagPacket(CONNECTION_ACCEPTED);
 
 			iter++;
 			break;
@@ -335,8 +342,6 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			printf("Client received CONNECTION_ACCEPTED packet from Host\n");
 
-			//this->SendFlagPackage(ACTION_EVENT);	//To spam the other client
-			//this->SendEntityUpdatePackage(this->testID, this->testFloat3, this->testFloat3, this->testFloat3, this->testFloat3);
 			this->SendAnimationPacket(this->testID);
 			this->testID++;
 			this->SendStatePacket(this->testID, true);
@@ -349,7 +354,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			
 			printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
 			
-			this->SendFlagPackage(DISCONNECT_ACCEPTED);
+			this->SendFlagPacket(DISCONNECT_ACCEPTED);
 			this->RemoveClient(iter->first);	//Send the clientID
 			
 			iter = this->connectedClients.end();
@@ -368,6 +373,8 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			eP.deserialize(network_data);
 			
+			this->packet_Buffer.push_back(eP);
+
 			printf("EntityID: %d\n", eP.entityID);
 
 			iter++;
@@ -377,8 +384,9 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			printf("Recived ANIMATION_UPDATE packet\n");
 
-			
 			aP.deserialize(network_data);
+
+			//this->packet_Buffer.push_back(aP);
 
 			printf("EntityID: %d\n", aP.entityID);
 
@@ -390,6 +398,9 @@ void ClientNetwork::ReadMessagesFromClients()
 			printf("Recived STATE_UPDATE packet\n");
 			
 			sP.deserialize(network_data);
+			
+		//	this->packet_Buffer.push_back(sP);
+
 			printf("StateID: %d\n", sP.entityID);
 
 			iter++;
