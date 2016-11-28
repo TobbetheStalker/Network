@@ -253,11 +253,6 @@ void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
 	this->SendToAll(packet_data, packet_size);
 }
 
-bool ClientNetwork::isPacketBufferLocked()
-{
-	return this->isLocked;
-}
-
 bool ClientNetwork::AcceptNewClient(unsigned int & id)
 {
 	SOCKET otherClientSocket;
@@ -307,7 +302,6 @@ void ClientNetwork::ReadMessagesFromClients()
 	AnimationPacket aP;
 	StatePacket sP;
 
-	//printf("PT: %d, fP: %d, eP, %d aP: %d, sP: %d\n",sizeof(PacketTypes), sizeof(FlagPacket), sizeof(EntityPacket), sizeof(AnimationPacket), sizeof(StatePacket));
 	// go through all clients
 	std::map<unsigned int, SOCKET>::iterator iter;
 
@@ -322,7 +316,6 @@ void ClientNetwork::ReadMessagesFromClients()
 			continue;
 		}
 
-		printf("Data_length: %d\n", data_length);
 		//Read the header (skip the first 4 bytes since it is virtual function information)
 		memcpy(&header, &network_data[4], sizeof(PacketTypes));
 
@@ -375,8 +368,6 @@ void ClientNetwork::ReadMessagesFromClients()
 			
 			this->packet_Buffer.push_back(eP);
 
-			printf("EntityID: %d\n", eP.entityID);
-
 			iter++;
 			break;
 
@@ -386,9 +377,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			aP.deserialize(network_data);
 
-			//this->packet_Buffer.push_back(aP);
-
-			printf("EntityID: %d\n", aP.entityID);
+			this->packet_Buffer.push_back(aP);
 
 			iter++;
 			break;
@@ -399,9 +388,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			
 			sP.deserialize(network_data);
 			
-		//	this->packet_Buffer.push_back(sP);
-
-			printf("StateID: %d\n", sP.entityID);
+			this->packet_Buffer.push_back(sP);
 
 			iter++;
 			break;
@@ -445,4 +432,120 @@ bool ClientNetwork::RemoveClient(unsigned int clientID)
 	}
 
 	return true;
+}
+
+bool ClientNetwork::PacketBuffer_isEmpty()
+{
+	return this->packet_Buffer.empty();
+}
+
+bool ClientNetwork::PacketBuffer_isLocked()
+{
+	return this->isLocked;
+}
+
+void ClientNetwork::PacketBuffer_Lock()
+{
+	this->isLocked = true;
+}
+
+void ClientNetwork::PacketBuffer_UnLock()
+{
+	this->isLocked = false;
+}
+
+std::list<Packet> ClientNetwork::PacketBuffer_GetPackets()
+{
+	std::list<Packet> result = this->packet_Buffer;
+
+	this->packet_Buffer.clear();
+
+	return result;
+}
+
+std::list<EntityPacket> ClientNetwork::PacketBuffer_GetEntityPackets()
+{
+	EntityPacket* ePP = nullptr;
+	std::list<EntityPacket> result;
+	std::list<Packet>::iterator iter;
+	bool deleted = false;
+
+	for (iter = this->packet_Buffer.begin(); iter != this->packet_Buffer.end();)
+	{
+		if (iter->packet_type == UPDATE_ENTITY)
+		{
+			
+			ePP = dynamic_cast<EntityPacket*>(&(*iter));
+
+			result.push_back(*ePP);
+			iter = this->packet_Buffer.erase(iter);	//Returns the next element after the errased element
+			ePP = nullptr;
+		
+		}
+		else
+		{
+			iter++;
+		}
+
+	}
+
+	return result;
+}
+
+std::list<AnimationPacket> ClientNetwork::PacketBuffer_GetAnimationPackets()
+{
+	AnimationPacket* aPP = nullptr;
+	std::list<AnimationPacket> result;
+	std::list<Packet>::iterator iter;
+	bool deleted = false;
+
+	for (iter = this->packet_Buffer.begin(); iter != this->packet_Buffer.end();)
+	{
+		if (iter->packet_type == UPDATE_ANIMATION)
+		{
+
+			aPP = dynamic_cast<AnimationPacket*>(&(*iter));
+
+			result.push_back(*aPP);
+			iter = this->packet_Buffer.erase(iter);	//Returns the next element after the errased element
+			aPP = nullptr;
+
+		}
+		else
+		{
+			iter++;
+		}
+
+	}
+
+	return result;
+}
+
+std::list<StatePacket> ClientNetwork::PacketBuffer_GetStatePackets()
+{
+	StatePacket* sPP = nullptr;
+	std::list<StatePacket> result;
+	std::list<Packet>::iterator iter;
+	bool deleted = false;
+
+	for (iter = this->packet_Buffer.begin(); iter != this->packet_Buffer.end();)
+	{
+		if (iter->packet_type == UPDATE_STATE)
+		{
+
+			sPP = dynamic_cast<StatePacket*>(&(*iter));
+
+			result.push_back(*sPP);
+			iter = this->packet_Buffer.erase(iter);	//Returns the next element after the errased element
+			sPP = nullptr;
+
+		}
+		else
+		{
+			iter++;
+		}
+
+	}
+
+	return result;
 }

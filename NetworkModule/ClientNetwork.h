@@ -5,12 +5,11 @@
 #include <ws2tcpip.h>
 #include <map>
 #include "NetworkData.h"
-#include <vector>
+#include <list>
 
 using namespace std;
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "6881"
 
 class ClientNetwork
@@ -20,7 +19,7 @@ private:
 	SOCKET listenSocket;	
 	SOCKET connectSocket; // Socket to listen for new connections	
 	std::map<unsigned int, SOCKET> connectedClients;	// table to keep track of each client's socket
-	std::vector<Packet> packet_Buffer;
+	std::list<Packet> packet_Buffer;
 	bool isLocked;
 	unsigned int client_id;
 
@@ -44,13 +43,21 @@ public:
 	void Update();
 	void Join(char* ip);
 
-	//Public package functions (send to all other clients e.g the other player)
+	//Public package functions (send to all other clients e.g the only other player)
 	void SendFlagPacket(PacketTypes type);
 	void SendEntityUpdatePacket(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
 	void SendAnimationPacket(unsigned int entityID);
 	void SendStatePacket(unsigned int entityID, bool newState);
 
-	bool isPacketBufferLocked();
+	bool PacketBuffer_isEmpty();
+	bool PacketBuffer_isLocked();
+	void PacketBuffer_Lock();
+	void PacketBuffer_UnLock();
+
+	std::list<Packet> PacketBuffer_GetPackets();					//Get ALL the packets in packet_Buffer	
+	std::list<EntityPacket> PacketBuffer_GetEntityPackets();		//Get ALL EntityPackets in packet_Buffer	
+	std::list<AnimationPacket> PacketBuffer_GetAnimationPackets();	//Get ALL AnimationPackets in packet_Buffer	
+	std::list<StatePacket> PacketBuffer_GetStatePackets();			//Get ALL StatePackets in packet_Buffer	
 
 };
 
