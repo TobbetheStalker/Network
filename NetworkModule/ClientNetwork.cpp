@@ -428,7 +428,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			p.deserialize(network_data);
 
-			printf("PacketID: %d, Timestamp: %f", p.packet_ID, p.timestamp);
+			printf("PacketID: %d, Timestamp: %f\n", p.packet_ID, p.timestamp);
 
 			this->SendFlagPacket(TEST_PACKET);
 
@@ -445,7 +445,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 float ClientNetwork::GetElapsedTime()
 {
-	return (std::clock() - this->startTime) / (double)CLOCKS_PER_SEC;;
+	return (std::clock() - this->startTime) / (float)CLOCKS_PER_SEC;;
 }
 
 void ClientNetwork::SendToAll(char * packets, int totalSize)
