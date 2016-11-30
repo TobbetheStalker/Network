@@ -1,9 +1,6 @@
-﻿  ClientNetwork.cpp
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(196): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(217): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(231): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(250): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(264): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(431): warning C4477: 'printf' : format string '%f' requires an argument of type 'double', but variadic argument 2 has type 'int'
+﻿  main.cpp
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\main.cpp(14): warning C4101: 'result': unreferenced local variable
+  ClientNetwork.cpp
+  Generating Code...
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)

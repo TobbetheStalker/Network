@@ -19,7 +19,7 @@ enum PacketTypes {
 
 struct Packet
 {
-	PacketTypes packet_type;	// 4
+	PacketTypes packet_type;
 	int packet_ID;
 	float timestamp;
 

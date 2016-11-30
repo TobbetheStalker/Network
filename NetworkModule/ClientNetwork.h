@@ -17,14 +17,15 @@ class ClientNetwork
 {
 
 private:
-	SOCKET listenSocket;	
-	SOCKET connectSocket; // Socket to listen for new connections	
-	std::map<unsigned int, SOCKET> connectedClients;	// table to keep track of each client's socket
-	std::list<Packet> packet_Buffer;
-	bool isLocked;
-	unsigned int client_id;
-	int packet_ID;
-	std::clock_t startTime;
+	bool			isLocked;
+	unsigned int	client_id;
+	int				packet_ID;
+	std::clock_t	startTime;
+
+	SOCKET							listenSocket;	
+	SOCKET							connectSocket; // Socket to listen for new connections	
+	std::map<unsigned int, SOCKET>	connectedClients;	// table to keep track of each client's socket
+	std::list<Packet>				packet_Buffer;
 
 	int ReceiveData(unsigned int client_id, char * recvbuf);
 	bool AcceptNewClient(unsigned int & id);	//accept new connections
