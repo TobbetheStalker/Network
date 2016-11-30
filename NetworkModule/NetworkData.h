@@ -14,7 +14,7 @@ enum PacketTypes {
 	UPDATE_ENTITY = 4,
 	UPDATE_ANIMATION = 5,
 	UPDATE_STATE = 6,
-
+	TEST_PACKET = 7,
 };
 
 struct Packet
