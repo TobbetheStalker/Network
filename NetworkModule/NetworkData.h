@@ -20,6 +20,8 @@ enum PacketTypes {
 struct Packet
 {
 	PacketTypes packet_type;	// 4
+	int packet_ID;
+	int timestamp;
 
 	virtual void serialize(char * data)
 	{			//Turn the PacketType into bytes

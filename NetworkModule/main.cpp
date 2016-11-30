@@ -1,6 +1,5 @@
 #include "ClientNetwork.h"
 #include <process.h>
-#include <ctime>
 
 const int TIME_TO_DISCONNECT = 1;
 

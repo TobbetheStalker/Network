@@ -6,6 +6,7 @@
 #include <map>
 #include "NetworkData.h"
 #include <list>
+#include <ctime>
 
 using namespace std;
 #pragma comment (lib, "Ws2_32.lib")
@@ -22,12 +23,15 @@ private:
 	std::list<Packet> packet_Buffer;
 	bool isLocked;
 	unsigned int client_id;
+	int packet_ID;
+	std::clock_t startTime;
 
 	int ReceiveData(unsigned int client_id, char * recvbuf);
 	bool AcceptNewClient(unsigned int & id);	//accept new connections
 	void SendToAll(char * packets, int totalSize);
 	bool RemoveClient(unsigned int clientID);
 	void ReadMessagesFromClients();
+	float GetElapsedTime();
 
 	//Test
 	int testID = 0;

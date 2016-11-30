@@ -2,6 +2,9 @@
 
 ClientNetwork::ClientNetwork()
 {
+	this->isLocked = false;
+	this->client_id = 0;
+	this->packet_ID = 0;
 }
 
 ClientNetwork::~ClientNetwork()
@@ -13,7 +16,6 @@ bool ClientNetwork::Initialize()
 	this->isLocked = false;
 	// create WSADATA object
 	WSADATA wsaData;
-	this->client_id = 0;
 	// our sockets for the server
 	this->listenSocket = INVALID_SOCKET;
 
@@ -90,6 +92,10 @@ bool ClientNetwork::Initialize()
 		return false;
 	}
 	printf("Initlized\n");
+
+	//Start the network system clock
+	this->startTime = std::clock();
+
 	return true;
 }
 
@@ -185,6 +191,9 @@ void ClientNetwork::Join(char* ip)
 
 	Packet packet;
 	packet.packet_type = CONNECTION_REQUEST;
+	packet.packet_ID = this->packet_ID; 
+	this->packet_ID++;
+	packet.timestamp = this->GetElapsedTime();
 
 	packet.serialize(packet_data);
 	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
@@ -204,6 +213,8 @@ void ClientNetwork::SendFlagPacket(PacketTypes type)
 	//Fill the packet
 	Packet packet;
 	packet.packet_type = type;
+	packet.packet_ID = this->packet_ID;
+	packet.timestamp = this->GetElapsedTime();
 
 	packet.serialize(packet_data);
 	this->SendToAll(packet_data, packet_size);
@@ -216,6 +227,8 @@ void ClientNetwork::SendEntityUpdatePacket(unsigned int entityID, DirectX::XMFLO
 
 	EntityPacket packet;
 	packet.packet_type = UPDATE_ENTITY;
+	packet.packet_ID = this->packet_ID;
+	packet.timestamp = this->GetElapsedTime();
 	packet.entityID = entityID;
 	packet.newPos = newPos;
 	packet.newRotation = newRotation;
@@ -233,6 +246,8 @@ void ClientNetwork::SendAnimationPacket(unsigned int entityID)
 
 	AnimationPacket packet;
 	packet.packet_type = UPDATE_ANIMATION;
+	packet.packet_ID = this->packet_ID;
+	packet.timestamp = this->GetElapsedTime();
 	packet.entityID = entityID;
 
 	packet.serialize(packet_data);
@@ -245,6 +260,8 @@ void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
 	char packet_data[packet_size];
 
 	StatePacket packet;
+	packet.packet_ID = this->packet_ID;
+	packet.timestamp = this->GetElapsedTime();
 	packet.packet_type = UPDATE_STATE;
 	packet.entityID = entityID;
 	packet.newState = newState;
@@ -298,6 +315,7 @@ void ClientNetwork::ReadMessagesFromClients()
 	bool t = true;
 	unsigned int header = -1;
 	
+	Packet p;
 	EntityPacket eP;
 	AnimationPacket aP;
 	StatePacket sP;
@@ -326,6 +344,8 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			printf("Host received connection packet from client\n");
 			
+			p.deserialize(network_data);
+
 			this->SendFlagPacket(CONNECTION_ACCEPTED);
 
 			iter++;
@@ -335,10 +355,14 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			printf("Client received CONNECTION_ACCEPTED packet from Host\n");
 
-			this->SendAnimationPacket(this->testID);
+			p.deserialize(network_data);
+
+			this->SendFlagPacket(TEST_PACKET);
+
+			/*this->SendAnimationPacket(this->testID);
 			this->testID++;
 			this->SendStatePacket(this->testID, true);
-			this->testID++;
+			this->testID++;*/
 
 			iter++;
 			break;
@@ -347,6 +371,8 @@ void ClientNetwork::ReadMessagesFromClients()
 			
 			printf("Host recived: DISCONNECT_REQUEST from Client %d \n", iter->first);
 			
+			p.deserialize(network_data);
+
 			this->SendFlagPacket(DISCONNECT_ACCEPTED);
 			this->RemoveClient(iter->first);	//Send the clientID
 			
@@ -356,6 +382,9 @@ void ClientNetwork::ReadMessagesFromClients()
 		case DISCONNECT_ACCEPTED:
 			
 			printf("Client recived: DISCONNECT_ACCEPTED\n");
+			
+			p.deserialize(network_data);
+			
 			this->RemoveClient(iter->first);	//Send the clientID
 			iter = this->connectedClients.end();
 			break;
@@ -393,11 +422,30 @@ void ClientNetwork::ReadMessagesFromClients()
 			iter++;
 			break;
 		
+		case TEST_PACKET:
+
+			printf("Recived TEST_PACKET packet\n");
+
+			p.deserialize(network_data);
+
+			printf("PacketID: %d, Timestamp: %f", p.packet_ID, p.timestamp);
+
+			this->SendFlagPacket(TEST_PACKET);
+
+			iter++;
+			break;
+
+
 		default:
 			printf("Unkown packet type %d\n", header);
 		}
 	}
 
+}
+
+float ClientNetwork::GetElapsedTime()
+{
+	return (std::clock() - this->startTime) / (double)CLOCKS_PER_SEC;;
 }
 
 void ClientNetwork::SendToAll(char * packets, int totalSize)
@@ -416,6 +464,11 @@ void ClientNetwork::SendToAll(char * packets, int totalSize)
 			printf("send failed with error: %d\n", WSAGetLastError());
 			closesocket(currentSocket);
 		}
+		else	//If the message was sent, incresse the packet ID
+		{
+			this->packet_ID++;
+		}
+
 	}
 }
 
