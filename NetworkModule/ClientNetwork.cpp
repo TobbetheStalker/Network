@@ -230,6 +230,9 @@ void ClientNetwork::SendSyncPacket()
 	packet.packet_ID = this->packet_ID;
 	packet.timestamp = this->GetTimeStamp();
 	packet.time_start = this->time_start;
+
+	packet.serialize(packet_data);
+	this->SendToAll(packet_data, packet_size);
 }
 
 void ClientNetwork::SendEntityUpdatePacket(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
