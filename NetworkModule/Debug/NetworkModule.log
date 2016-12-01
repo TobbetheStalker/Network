@@ -1,9 +1,9 @@
 ﻿  main.cpp
 c:\users\tobias kling\documents\git\networkmodule\networkmodule\main.cpp(14): warning C4101: 'result': unreferenced local variable
-  Generating Code...
-  Compiling...
   ClientNetwork.cpp
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(226): warning C4101: 'packet_data': unreferenced local variable
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(377): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(468): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(469): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
   Generating Code...
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
   NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)

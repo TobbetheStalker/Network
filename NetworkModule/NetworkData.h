@@ -38,15 +38,14 @@ struct Packet
 
 struct SyncPacket: public Packet
 {
-	
 	std::clock_t time_start;
 
 	virtual void serialize(char * data)
-	{			//Turn the PacketType into bytes
+	{			
 		memcpy(data, this, sizeof(SyncPacket));
 	}
 	virtual void deserialize(char * data)
-	{			//Turn bytes into PacketType
+	{			
 		memcpy(this, data, sizeof(SyncPacket));
 	}
 };

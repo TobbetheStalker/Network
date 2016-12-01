@@ -20,8 +20,8 @@ private:
 	bool			isLocked;
 	unsigned int	client_id;
 	int				packet_ID;
-	std::clock_t	time_start;
-	float			time_current;	//nr of secounds since start (connected clients will sync to host)
+	int				time_start;		//time in ms
+	int				time_current;	//nr of secounds since start (connected clients will sync to host)
 
 	SOCKET							listenSocket;	
 	SOCKET							connectSocket;		// Socket to listen for new connections	
