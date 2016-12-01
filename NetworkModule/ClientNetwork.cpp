@@ -94,7 +94,7 @@ bool ClientNetwork::Initialize()
 	printf("Initlized\n");
 
 	//Start the network system clock
-	this->startTime = std::clock();
+	this->time_start = std::clock();
 
 	return true;
 }
@@ -345,18 +345,17 @@ void ClientNetwork::ReadMessagesFromClients()
 			printf("Host received connection packet from client\n");
 			
 			p.deserialize(network_data);
-
+			
 			this->SendFlagPacket(CONNECTION_ACCEPTED);
-
+			
 			iter++;
 			break;
 
 		case CONNECTION_ACCEPTED:
 
 			printf("Client received CONNECTION_ACCEPTED packet from Host\n");
-
+			
 			p.deserialize(network_data);
-
 			this->SendFlagPacket(TEST_PACKET);
 
 			/*this->SendAnimationPacket(this->testID);
@@ -443,9 +442,10 @@ void ClientNetwork::ReadMessagesFromClients()
 
 }
 
-float ClientNetwork::GetElapsedTime()
+float ClientNetwork::GetTimeStamp()
 {
-	return (std::clock() - this->startTime) / (float)CLOCKS_PER_SEC;;
+	this->time_current = (std::clock() - this->time_start) / (float)CLOCKS_PER_SEC;
+	return this->time_current;
 }
 
 void ClientNetwork::SendToAll(char * packets, int totalSize)
