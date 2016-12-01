@@ -6,7 +6,7 @@
 #include <map>
 #include "NetworkData.h"
 #include <list>
-#include <ctime>
+
 
 using namespace std;
 #pragma comment (lib, "Ws2_32.lib")
@@ -51,6 +51,7 @@ public:
 
 	//Public package functions (send to all other clients e.g the only other player)
 	void SendFlagPacket(PacketTypes type);
+	void SendSyncPacket();
 	void SendEntityUpdatePacket(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity);
 	void SendAnimationPacket(unsigned int entityID);
 	void SendStatePacket(unsigned int entityID, bool newState);

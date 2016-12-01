@@ -220,6 +220,18 @@ void ClientNetwork::SendFlagPacket(PacketTypes type)
 	this->SendToAll(packet_data, packet_size);
 }
 
+void ClientNetwork::SendSyncPacket()
+{
+	const unsigned int packet_size = sizeof(SyncPacket);
+	char packet_data[packet_size];
+
+	SyncPacket packet;
+	packet.packet_type = CONNECTION_ACCEPTED;
+	packet.packet_ID = this->packet_ID;
+	packet.timestamp = this->GetTimeStamp();
+	packet.time_start = this->time_start;
+}
+
 void ClientNetwork::SendEntityUpdatePacket(unsigned int entityID, DirectX::XMFLOAT3 newPos, DirectX::XMFLOAT3 newVelocity, DirectX::XMFLOAT3 newRotation, DirectX::XMFLOAT3 newRotationVelocity)
 {
 	const unsigned int packet_size = sizeof(EntityPacket);
@@ -316,6 +328,7 @@ void ClientNetwork::ReadMessagesFromClients()
 	unsigned int header = -1;
 	
 	Packet p;
+	SyncPacket syP;
 	EntityPacket eP;
 	AnimationPacket aP;
 	StatePacket sP;
@@ -346,7 +359,7 @@ void ClientNetwork::ReadMessagesFromClients()
 			
 			p.deserialize(network_data);
 			
-			this->SendFlagPacket(CONNECTION_ACCEPTED);
+			this->SendSyncPacket();
 			
 			iter++;
 			break;
@@ -355,13 +368,14 @@ void ClientNetwork::ReadMessagesFromClients()
 
 			printf("Client received CONNECTION_ACCEPTED packet from Host\n");
 			
-			p.deserialize(network_data);
-			this->SendFlagPacket(TEST_PACKET);
-
+			syP.deserialize(network_data);
+			
 			//Sync clock
-			this->time_current = p.timestamp;
-			this->time_start = (std::clock() - this->time_current) / (float)CLOCKS_PER_SEC;
-
+			this->time_current = syP.timestamp;
+			this->time_start = syP.time_start;
+			
+			this->SendFlagPacket(TEST_PACKET);
+	
 			/*this->SendAnimationPacket(this->testID);
 			this->testID++;
 			this->SendStatePacket(this->testID, true);

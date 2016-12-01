@@ -1,15 +1,7 @@
 ﻿  main.cpp
 c:\users\tobias kling\documents\git\networkmodule\networkmodule\main.cpp(14): warning C4101: 'result': unreferenced local variable
   ClientNetwork.cpp
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(196): error C2039: 'GetElapsedTime': is not a member of 'ClientNetwork'
-  c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.h(17): note: see declaration of 'ClientNetwork'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(217): error C2039: 'GetElapsedTime': is not a member of 'ClientNetwork'
-  c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.h(17): note: see declaration of 'ClientNetwork'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(231): error C2039: 'GetElapsedTime': is not a member of 'ClientNetwork'
-  c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.h(17): note: see declaration of 'ClientNetwork'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(250): error C2039: 'GetElapsedTime': is not a member of 'ClientNetwork'
-  c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.h(17): note: see declaration of 'ClientNetwork'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(264): error C2039: 'GetElapsedTime': is not a member of 'ClientNetwork'
-  c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.h(17): note: see declaration of 'ClientNetwork'
-c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(363): warning C4244: '=': conversion from 'float' to 'clock_t', possible loss of data
+c:\users\tobias kling\documents\git\networkmodule\networkmodule\clientnetwork.cpp(226): warning C4101: 'packet_data': unreferenced local variable
   Generating Code...
+  NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.exe
+  NetworkModule.vcxproj -> C:\Users\Tobias Kling\Documents\Git\NetworkModule\Debug\NetworkModule.pdb (Partial PDB)

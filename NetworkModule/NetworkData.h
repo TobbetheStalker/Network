@@ -4,6 +4,7 @@
 #define MAX_PACKET_SIZE 1000000
 
 #include <DirectXMath.h>
+#include <ctime>
 
 enum PacketTypes {
 
@@ -33,6 +34,21 @@ struct Packet
 		memcpy(this, data, sizeof(Packet));
 	}
 
+};
+
+struct SyncPacket: public Packet
+{
+	
+	std::clock_t time_start;
+
+	virtual void serialize(char * data)
+	{			//Turn the PacketType into bytes
+		memcpy(data, this, sizeof(SyncPacket));
+	}
+	virtual void deserialize(char * data)
+	{			//Turn bytes into PacketType
+		memcpy(this, data, sizeof(SyncPacket));
+	}
 };
 
 struct EntityPacket: public Packet
