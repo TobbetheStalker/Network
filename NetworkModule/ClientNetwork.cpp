@@ -465,7 +465,7 @@ void ClientNetwork::ReadMessagesFromClients()
 
 float ClientNetwork::GetTimeStamp()
 {
-	this->time_current = (std::clock() - this->time_start) / 100.f;	//ms
+	this->time_current = (std::clock() - this->time_start) / (float)CLOCKS_PER_SEC;
 	return this->time_current;
 }
 
