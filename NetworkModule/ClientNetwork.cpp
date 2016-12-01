@@ -193,7 +193,7 @@ void ClientNetwork::Join(char* ip)
 	packet.packet_type = CONNECTION_REQUEST;
 	packet.packet_ID = this->packet_ID; 
 	this->packet_ID++;
-	packet.timestamp = this->GetElapsedTime();
+	packet.timestamp = this->GetTimeStamp();
 
 	packet.serialize(packet_data);
 	NetworkService::sendMessage(this->connectSocket, packet_data, packet_size);
@@ -214,7 +214,7 @@ void ClientNetwork::SendFlagPacket(PacketTypes type)
 	Packet packet;
 	packet.packet_type = type;
 	packet.packet_ID = this->packet_ID;
-	packet.timestamp = this->GetElapsedTime();
+	packet.timestamp = this->GetTimeStamp();
 
 	packet.serialize(packet_data);
 	this->SendToAll(packet_data, packet_size);
@@ -228,7 +228,7 @@ void ClientNetwork::SendEntityUpdatePacket(unsigned int entityID, DirectX::XMFLO
 	EntityPacket packet;
 	packet.packet_type = UPDATE_ENTITY;
 	packet.packet_ID = this->packet_ID;
-	packet.timestamp = this->GetElapsedTime();
+	packet.timestamp = this->GetTimeStamp();
 	packet.entityID = entityID;
 	packet.newPos = newPos;
 	packet.newRotation = newRotation;
@@ -247,7 +247,7 @@ void ClientNetwork::SendAnimationPacket(unsigned int entityID)
 	AnimationPacket packet;
 	packet.packet_type = UPDATE_ANIMATION;
 	packet.packet_ID = this->packet_ID;
-	packet.timestamp = this->GetElapsedTime();
+	packet.timestamp = this->GetTimeStamp();
 	packet.entityID = entityID;
 
 	packet.serialize(packet_data);
@@ -261,7 +261,7 @@ void ClientNetwork::SendStatePacket(unsigned int entityID, bool newState)
 
 	StatePacket packet;
 	packet.packet_ID = this->packet_ID;
-	packet.timestamp = this->GetElapsedTime();
+	packet.timestamp = this->GetTimeStamp();
 	packet.packet_type = UPDATE_STATE;
 	packet.entityID = entityID;
 	packet.newState = newState;
@@ -357,6 +357,10 @@ void ClientNetwork::ReadMessagesFromClients()
 			
 			p.deserialize(network_data);
 			this->SendFlagPacket(TEST_PACKET);
+
+			//Sync clock
+			this->time_current = p.timestamp;
+			this->time_start = (std::clock() - this->time_current) / (float)CLOCKS_PER_SEC;
 
 			/*this->SendAnimationPacket(this->testID);
 			this->testID++;
